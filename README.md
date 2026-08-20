@@ -1,2 +1,2 @@
-# student-career-plannner-project
-cmpe 131 term project 
+# student-career-planner-project
+cmpe 131 term project 1
