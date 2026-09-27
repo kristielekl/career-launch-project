@@ -1,0 +1,14 @@
+{
+  "name": "cmpe131-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CMPE 131 minimal starter app (UI -> API -> SQLite)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  }
+}

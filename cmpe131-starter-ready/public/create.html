@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Create Appointment</title>
+</head>
+<body>
+  <h1>Create Appointment</h1>
+
+  <form id="form">
+    <div>
+      <label>Customer Name: <input name="customerName" required /></label>
+    </div>
+    <div>
+      <label>Service: <input name="service" required /></label>
+    </div>
+    <div>
+      <label>Date: <input name="date" placeholder="YYYY-MM-DD" required /></label>
+    </div>
+    <div>
+      <label>Time: <input name="time" placeholder="HH:MM" required /></label>
+    </div>
+    <div>
+      <label>Notes: <input name="notes" /></label>
+    </div>
+    <button type="submit">Create</button>
+  </form>
+
+  <p><a href="/">Back</a></p>
+
+  <script>
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = Object.fromEntries(fd.entries());
+
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert("Error: " + (err.error || "Unknown"));
+        return;
+      }
+      window.location.href = "/";
+    });
+  </script>
+</body>
+</html>
