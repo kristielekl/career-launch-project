@@ -2,37 +2,38 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>CMPE 131 Starter - Appointments</title>
+  <title>CareerLaunch - Main Page</title>
 </head>
 <body>
-  <h1>Appointments (Starter)</h1>
+  <div class="navigation-headings">
+    <h1>
+      <a href="index.html" class="navigation" id="titletext">CareerLaunch</a>
+    </h1>
+  
+    <h2>
+      <a href="index.html" class="navigation" id="maintext">Main Page</a>
+    </h2>
 
-  <p>
-    <a href="/create.html">Create a new appointment</a>
-  </p>
+    <h2>
+      <a href="dashboard.html" class="navigation" id="dashboardtext">Dashboard</a>
+    </h2>
 
-  <button id="refreshBtn">Refresh List</button>
-  <ul id="list"></ul>
+    <h2>
+      <a href="timeline.html" class="navigation" id="navigationtext">Timeline</a>
+    </h2>
 
-  <script>
-    async function load() {
-      const res = await fetch("/api/appointments");
-      const items = await res.json();
-      const ul = document.getElementById("list");
-      ul.innerHTML = "";
+    <h2>
+      <a href="https://careercenter.sjsu.edu/resources/" target="_blank" class="navigation">
+        SJSU Career Resources
+        <img src="css/images/external_link_icon.png" class="navigation" id="externalicon" alt="External Link Icon">
+      </a>
+    </h2>
+  </div>
 
-      items.forEach(a => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <b>#${a.id}</b> ${a.customerName} - ${a.service} (${a.date} ${a.time})
-          <a href="/edit.html?id=${a.id}">edit</a>
-        `;
-        ul.appendChild(li);
-      });
-    }
+  <p>This is the main page</p>
 
-    document.getElementById("refreshBtn").addEventListener("click", load);
-    load();
   </script>
+
+  <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
 </body>
 </html>
