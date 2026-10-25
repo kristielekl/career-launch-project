@@ -32,6 +32,26 @@
 
   <p>This is the main page</p>
 
+  <!--The following is the script from the original starter-->
+  <script>
+    async function load() {
+      const res = await fetch("/api/appointments");
+      const items = await res.json();
+      const ul = document.getElementById("list");
+      ul.innerHTML = "";
+
+      items.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <b>#${a.id}</b> ${a.customerName} - ${a.service} (${a.date} ${a.time})
+          <a href="/edit.html?id=${a.id}">edit</a>
+        `;
+        ul.appendChild(li);
+      });
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", load);
+    load();
   </script>
 
   <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
