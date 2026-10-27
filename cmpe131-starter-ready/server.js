@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/questions", questionRoutes(db));
+app.use("/api/dashboard", require("./routes/dashboardRoutes")(db));
 
 // Health check
 app.get("/api/health", (req, res) => {
