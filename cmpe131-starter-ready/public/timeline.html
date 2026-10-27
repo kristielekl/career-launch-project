@@ -1,1 +1,80 @@
-# timeline html 
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Timeline Page</title>
+  <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
+</head>
+<body>
+  <div class="navigation-headings">
+    <h1>
+      <a href="index.html" class="navigation" id="titletext">CareerLaunch</a>
+    </h1>
+  
+    <h2>
+      <a href="index.html" class="navigation" id="maintext">Main Page</a>
+    </h2>
+
+    <h2>
+      <a href="dashboard.html" class="navigation" id="dashboardtext">Dashboard</a>
+    </h2>
+
+    <h2>
+      <a href="timeline.html" class="navigation" id="navigationtext">Timeline</a>
+    </h2>
+
+    <h2>
+      <a href="https://careercenter.sjsu.edu/resources/" target="_blank" class="navigation">
+        SJSU Career Resources
+        <img src="css/images/external_link_icon.png" class="navigation" id="externalicon" alt="External Link Icon">
+      </a>
+    </h2>
+
+    <h2>
+      <a href="login.html" class="navigation" id="logintext">Login</a>
+    </h2>
+  </div>
+
+  <h2 id="timelineHeader">Timeline</h2>
+  <hr>
+
+  <!--Create Task Button Shows the Task Creation Menu-->
+  <button id="taskCreationOpenButton">Create a Task</button>
+  
+  <div class="taskcreation-container">
+    <form id="taskCreationForm" action="/add-task" method="post">
+      <label for="taskTitle">Task Name:</label>
+      <input type="text" id="taskTitle" name="taskTitle" placeholder="Enter Task Name" required>
+
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="category" placeholder="Enter Category of Task" required>
+
+      <label for="dueDate">Due Date:</label>
+      <input type="date" id="dueDate" placeholder="01/01/2001" name="dueDate required">
+
+      <label for="estimatedHours">Estimated Hours:</label>
+      <input type="number" id="estimatedHours" name="estimatedHours" placeholder="Enter Estimated Hours" required>
+
+      <label for="taskStatus">Status Progress (1-100%):</label>
+      <input type="number" id="taskStatus" name="taskStatus" placeholder="Enter Status Progress" required>
+
+      <button id="taskCreationCloseButton">Cancel</button>
+      <button id="taskCreationSubmitButton" type="submit">Submit</button>
+    </form>
+  </div>
+
+  <!-- Opening and Closing Create a Task Menu-->
+  <script>
+    // Opens "Create a Task" Menu
+    document.getElementById("taskCreationOpenButton").addEventListener("click", function() {
+      document.getElementById("taskCreationForm").style.display="block";
+    });
+    // Closes "Create a Task" Menu
+    document.getElementById("taskCreationCloseButton").addEventListener("click", function() {
+      document.getElementById("taskCreationForm").style.display="none";
+    });
+  </script>
+
+  
+</body>
+</html>
