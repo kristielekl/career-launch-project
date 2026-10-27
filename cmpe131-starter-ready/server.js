@@ -81,22 +81,10 @@ app.delete("/api/appointments/:id", (req, res) => {
   });
 });
 
+const { createTimelineRoutes } = require("./routes/timelineRoutes");
+app.use("/api/tasks", createTimelineRoutes(db));
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Starter app running: http://localhost:${PORT}`);
 });
-
-
-
-/**
- * Import the TimelineTask router.
- *
- * The router contains all TimelineTask API endpoints.
- */
-const timelineRoutes = require("./routes/timelineRoutes");
-
-/**
- * Register TimelineTask API routes.
- *
- */
-app.use("/api/tasks", timelineRoutes);

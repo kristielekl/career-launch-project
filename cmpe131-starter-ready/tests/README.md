@@ -6,9 +6,11 @@ and SQLite together. Use disposable test data and an isolated test database.
 
 Reference applicable Test Plan case IDs in test names or descriptions, such as
 TC-001 (create TimelineTask), TC-002 (invalid input), and TC-009 (user data isolation).
-These are planned CareerLaunch behaviors, not claims that those features exist yet.
+Run `npm test` from `cmpe131-starter-ready` after installing dependencies.
+The tests cover repository CRUD, status rules, API create/read persistence after
+reopening the application database, invalid input, user isolation, and database errors.
 
 Keep manual scenarios and test results here as Markdown when automation is not
 available, recording inputs, expected and actual results, and the tested commit.
-Document the test command here when tests are added; no test runner is configured
-by this folder scaffold.
+For Timeline Create/View, also check the empty state, Cancel, submit, validation
+messages, and saved tasks after browser refresh and application restart.

@@ -42,39 +42,31 @@
   <button id="taskCreationOpenButton">Create a Task</button>
   
   <div class="taskcreation-container">
-    <form id="taskCreationForm" action="/add-task" method="post">
-      <label for="taskTitle">Task Name:</label>
+    <form id="taskCreationForm" action="/api/tasks" method="post">
+      <label for="taskTitle">Task Name (required):</label>
       <input type="text" id="taskTitle" name="taskTitle" placeholder="Enter Task Name" required>
 
-      <label for="category">Category:</label>
+      <label for="category">Category (required):</label>
       <input type="text" id="category" name="category" placeholder="Enter Category of Task" required>
 
-      <label for="dueDate">Due Date:</label>
-      <input type="date" id="dueDate" placeholder="01/01/2001" name="dueDate required">
+      <label for="dueDate">Due Date (required):</label>
+      <input type="date" id="dueDate" placeholder="01/01/2001" name="dueDate" required>
 
       <label for="estimatedHours">Estimated Hours:</label>
-      <input type="number" id="estimatedHours" name="estimatedHours" placeholder="Enter Estimated Hours" required>
+      <input type="number" id="estimatedHours" name="estimatedHours" placeholder="Enter Estimated Hours" min="0" step="any">
 
-      <label for="taskStatus">Status Progress (1-100%):</label>
-      <input type="number" id="taskStatus" name="taskStatus" placeholder="Enter Status Progress" required>
+      <label for="description">Description:</label>
+      <textarea id="description" name="description"></textarea>
+      <p>New tasks start as Planned.</p>
 
-      <button id="taskCreationCloseButton">Cancel</button>
+      <button id="taskCreationCloseButton" type="button">Cancel</button>
       <button id="taskCreationSubmitButton" type="submit">Submit</button>
     </form>
   </div>
 
-  <!-- Opening and Closing Create a Task Menu-->
-  <script>
-    // Opens "Create a Task" Menu
-    document.getElementById("taskCreationOpenButton").addEventListener("click", function() {
-      document.getElementById("taskCreationForm").style.display="block";
-    });
-    // Closes "Create a Task" Menu
-    document.getElementById("taskCreationCloseButton").addEventListener("click", function() {
-      document.getElementById("taskCreationForm").style.display="none";
-    });
-  </script>
-
-  
+  <p id="taskError" role="alert"></p>
+  <p id="taskEmpty">Loading tasks…</p>
+  <ul id="taskList" aria-label="Saved tasks"></ul>
+  <script src="js/timeline.js"></script>
 </body>
 </html>
