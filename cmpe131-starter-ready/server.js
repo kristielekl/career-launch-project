@@ -4,9 +4,12 @@ const { openDb } = require("./db");
 
 const app = express();
 const db = openDb();
+const questionRoutes = require("./routes/questionRoutes");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/api/questions", questionRoutes(db));
 
 // Health check
 app.get("/api/health", (req, res) => {
@@ -77,6 +80,9 @@ app.delete("/api/appointments/:id", (req, res) => {
     res.json({ ok: true });
   });
 });
+
+const { createTimelineRoutes } = require("./routes/timelineRoutes");
+app.use("/api/tasks", createTimelineRoutes(db));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
