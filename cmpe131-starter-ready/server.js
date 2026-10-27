@@ -4,11 +4,13 @@ const { openDb } = require("./db");
 
 const app = express();
 const db = openDb();
+const { createTimelineRoutes } = require("./routes/timelineRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/api/tasks", createTimelineRoutes(db));
 app.use("/api/questions", questionRoutes(db));
 
 // Health check
@@ -81,8 +83,7 @@ app.delete("/api/appointments/:id", (req, res) => {
   });
 });
 
-const { createTimelineRoutes } = require("./routes/timelineRoutes");
-app.use("/api/tasks", createTimelineRoutes(db));
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -90,16 +91,3 @@ app.listen(PORT, () => {
 });
 
 
-
-/**
- * Import the TimelineTask router.
- *
- * The router contains all TimelineTask API endpoints.
- */
-const timelineRoutes = require("./routes/timelineRoutes");
-
-/**
- * Register TimelineTask API routes.
- *
- */
-app.use("/api/tasks", timelineRoutes);
