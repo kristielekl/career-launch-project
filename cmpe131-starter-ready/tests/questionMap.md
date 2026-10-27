@@ -25,3 +25,40 @@ Integration contract for #24:
 This PR adds only the read-only catalog endpoint (`GET /api/questions`).
 Progress API validation and browser completion controls remain for #24;
 completion persistence is exercised directly through the repository here.
+
+## Final-release completion requirements (follow-up #24)
+
+The PRD 4.1 requires manual completion and progress for each topic. The API
+alone does not satisfy that requirement. The integration must also:
+
+- Show a labeled checkbox for each question, initialized from the active
+  user's saved progress (missing rows mean incomplete).
+- Save checking and unchecking through the progress API, then update that
+  topic's completed/total count and percentage after a successful save.
+- Keep the prior checkbox and summary values if saving fails and show an
+  understandable error message.
+- Restore the saved values and topic summaries after refresh/server restart.
+- Keep different users' progress isolated. Opening a LeetCode link must not
+  mark the question complete.
+
+Release acceptance: check a question, verify its topic's count/percentage,
+refresh, uncheck it, and verify the updated count/percentage and persistence.
+Repeat with another simulated user and verify isolation. This remains a
+required integration check before release; #23 alone is not the complete
+coding-progress feature.
+
+## Browser validation — 2026-10-27
+
+Passed in headless Chromium against PR #52:
+
+- Dashboard → Browse Question Map loads all four questions.
+- Each of the four topic filters shows its matching question; All topics
+  restores all four questions.
+- Each question link opens its expected LeetCode problem URL in a new tab.
+- Refresh reloads the catalog; a failed catalog request shows the error message.
+- No browser JavaScript errors were observed.
+
+External requests were intercepted for the new-tab checks; this verifies the
+navigation URL and behavior, not live LeetCode content or availability.
+T3 preview was unavailable because its browser sandbox cannot start as root;
+the check used local Playwright/Chromium without changing project dependencies.
