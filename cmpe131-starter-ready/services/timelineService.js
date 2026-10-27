@@ -83,6 +83,10 @@ function validateTask(data) {
     errors.push("Estimated hours must be nonnegative.");
   }
 
+  if (data.description != null && typeof data.description !== "string") {
+    errors.push("Description must be text.");
+  }
+
   // A new task defaults to Planned if no status is given.
   const status = data.status ?? "Planned";
 

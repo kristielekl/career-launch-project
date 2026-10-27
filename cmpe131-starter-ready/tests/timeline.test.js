@@ -1,12 +1,15 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const express = require("express");
-const timelineRoutes = require("../routes/timelineRoutes");
+const { createTimelineRoutes } = require("../routes/timelineRoutes");
+const { openDb } = require("../db");
 
 test("tasks start Planned and change status only after creation", async t => {
   const app = express();
   app.use(express.json());
-  app.use("/api/tasks", timelineRoutes);
+  const db = openDb(":memory:");
+  t.after(() => new Promise(resolve => db.close(resolve)));
+  app.use("/api/tasks", createTimelineRoutes(db));
   const server = app.listen(0, "127.0.0.1");
   t.after(() => new Promise(resolve => server.close(resolve)));
   await new Promise(resolve => server.once("listening", resolve));
