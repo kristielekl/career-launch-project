@@ -121,6 +121,11 @@ router.post("/", (req, res) => {
   // Validate before creating the task.
   const errors = validateTask(data);
 
+  // SAD section 3.3: tasks must be created in Planned before changing status.
+  if (data.status != null && data.status !== "Planned") {
+    errors.push("New tasks must start in Planned status.");
+  }
+
   if (errors.length > 0) {
     return res.status(400).json({ errors });
   }
@@ -133,7 +138,7 @@ router.post("/", (req, res) => {
     category: data.category.trim(),
     dueDate: data.dueDate,
     estimatedHours: data.estimatedHours ?? null,
-    status: data.status ?? "Planned"
+    status: "Planned"
   };
 
   // Temporarily store the task in memory.
