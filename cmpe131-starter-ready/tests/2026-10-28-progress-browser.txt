@@ -1,0 +1,10 @@
+Browser: Chromium 141.0.7390.37; isolated SQLite; Linux x64
+PASS: production registration, Dashboard navigation, labeled controls and incomplete defaults/user isolation
+PASS: all topic filters and All topics
+PASS: check saves, updates topic count/percentage and survives refresh
+PASS: completion and reopening survive real server restarts
+PASS: failed save rolls back checkbox/count, leaves DB unchanged and allows retry
+PASS: external new-tab URL is correct, link navigation does not change progress, other user unchanged
+PASS: failed catalog/progress loads show error and no editable unsaved defaults
+PASS: real-server malformed JSON returns controlled 400; no browser JavaScript errors
+External requests were intercepted; live LeetCode content was not tested.
