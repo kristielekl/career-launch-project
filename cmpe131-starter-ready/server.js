@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const { openDb } = require("./db");
+const { createProgressRoutes } = require("./routes/progressRoutes");
 
 const app = express();
 const db = openDb();
@@ -12,6 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/tasks", createTimelineRoutes(db));
 app.use("/api/questions", questionRoutes(db));
+app.use("/api/progress", createProgressRoutes(db));
 
 // Health check
 app.get("/api/health", (req, res) => {
