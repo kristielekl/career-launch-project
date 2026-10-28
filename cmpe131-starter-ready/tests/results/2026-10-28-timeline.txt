@@ -1,0 +1,35 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> cmpe131-starter@1.0.0 test
+> node --test
+
+✔ catalog covers the four PRD topics with matching LeetCode links (9.331632ms)
+✔ complete, repeat and reopen keep one row per user/question and isolate users (5.808958ms)
+✔ unknown questions and invalid completion fail without changing progress (14.720708ms)
+✔ progress survives process restart and seeds do not duplicate or reset it (153.124829ms)
+✔ production server mounts task JSON handling before the starter parser (247.536034ms)
+✔ tasks start Planned and change status only after creation (123.496609ms)
+✔ API create/list persists in SQLite across application restart (99.280447ms)
+✔ invalid input and unowned IDs never change saved tasks (53.994308ms)
+✔ database errors return a controlled message (15.144866ms)
+✔ TC-001/003/004/005: create, read, update, reopen and hard delete (12.583008ms)
+✔ TC-009: every operation is scoped to the simulated user (8.142141ms)
+✔ missing IDs return undefined or zero without changing saved tasks (3.747353ms)
+✔ queries bind text and IDs as data and list tasks by due date (5.375134ms)
+✔ constraint errors reach the caller and failed updates preserve data (4.447507ms)
+✔ saved tasks survive process restart and repeated schema initialization (197.951677ms)
+✔ service rejects invalid body shapes and permits only the SAD status matrix (1.270233ms)
+✔ missing and invalid create/update fields leave every stored row unchanged (163.453127ms)
+✔ IDs must be positive decimal safe integers for read, update and delete (42.518196ms)
+✔ client user IDs cannot expose or mutate another simulated user's task (12.279581ms)
+✔ completion timestamps are server-owned, preserved on edits and cleared on reopening (12.179551ms)
+✔ malformed, scalar and oversized JSON return controlled errors without writes (19.221109ms)
+✔ SQLite write failures are masked and preserve previously stored data (16.306715ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 459.026163
