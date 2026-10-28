@@ -5,12 +5,14 @@ const { createProgressRoutes } = require("./routes/progressRoutes");
 
 const app = express();
 const db = openDb();
+const { createTimelineRoutes } = require("./routes/timelineRoutes");
 app.use("/api/progress", createProgressRoutes(db));
 const questionRoutes = require("./routes/questionRoutes");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+app.use("/api/tasks", createTimelineRoutes(db));
 app.use("/api/questions", questionRoutes(db));
 
 // Health check
@@ -83,8 +85,7 @@ app.delete("/api/appointments/:id", (req, res) => {
   });
 });
 
-const { createTimelineRoutes } = require("./routes/timelineRoutes");
-app.use("/api/tasks", createTimelineRoutes(db));
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
