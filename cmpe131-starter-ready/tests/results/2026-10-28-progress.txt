@@ -1,0 +1,34 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> cmpe131-starter@1.0.0 test
+> node --test
+
+✔ GET includes incomplete defaults; complete/repeat/reopen persist one row (75.30585ms)
+✔ missing, malformed and nonexistent question IDs are rejected without writes (46.598696ms)
+✔ only boolean completion in an object is accepted; failures preserve all users (37.326178ms)
+✔ simulated user ignores client ownership and other users keep separate progress (9.588139ms)
+✔ malformed/scalar/oversized JSON is controlled and never changes progress (15.567382ms)
+✔ failed SQLite upserts preserve rows; database read errors never expose internals (25.705589ms)
+✔ HTTP progress saves survive closing and reopening the application database (33.304066ms)
+✔ catalog covers the four PRD topics with matching LeetCode links (16.420777ms)
+✔ complete, repeat and reopen keep one row per user/question and isolate users (6.423774ms)
+✔ unknown questions and invalid completion fail without changing progress (5.525611ms)
+✔ progress survives process restart and seeds do not duplicate or reset it (143.429905ms)
+✔ tasks start Planned and change status only after creation (96.077469ms)
+✔ API create/list persists in SQLite across application restart (111.039995ms)
+✔ invalid input and unowned IDs never change saved tasks (56.282288ms)
+✔ database errors return a controlled message (16.566387ms)
+✔ TC-001/003/004/005: create, read, update, reopen and hard delete (14.507366ms)
+✔ TC-009: every operation is scoped to the simulated user (3.990138ms)
+✔ missing IDs return undefined or zero without changing saved tasks (4.264632ms)
+✔ queries bind text and IDs as data and list tasks by due date (7.314484ms)
+✔ constraint errors reach the caller and failed updates preserve data (4.875392ms)
+✔ saved tasks survive process restart and repeated schema initialization (198.450282ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 406.840279
