@@ -1,10 +1,12 @@
 const express = require("express");
 const path = require("path");
 const { openDb } = require("./db");
+const { createProgressRoutes } = require("./routes/progressRoutes");
 
 const app = express();
 const db = openDb();
 const { createTimelineRoutes } = require("./routes/timelineRoutes");
+app.use("/api/progress", createProgressRoutes(db));
 const questionRoutes = require("./routes/questionRoutes");
 
 app.use(express.json());
