@@ -132,3 +132,5 @@ loadTasks().catch(() => {
   emptyMessage.textContent = "";
   errorMessage.textContent = "Unable to load tasks. Please refresh to try again.";
 });
+
+if (location.hash === "#create") document.getElementById("taskCreationOpenButton").click();
