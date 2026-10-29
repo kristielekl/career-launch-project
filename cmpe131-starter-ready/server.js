@@ -9,10 +9,10 @@ const { createTimelineRoutes } = require("./routes/timelineRoutes");
 app.use("/api/progress", createProgressRoutes(db));
 const questionRoutes = require("./routes/questionRoutes");
 
+app.use("/api/tasks", createTimelineRoutes(db));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use("/api/tasks", createTimelineRoutes(db));
 app.use("/api/questions", questionRoutes(db));
 
 // Health check
@@ -84,8 +84,6 @@ app.delete("/api/appointments/:id", (req, res) => {
     res.json({ ok: true });
   });
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -15,13 +15,16 @@ function toApi(task) {
 
 function toStorage(task) {
   return {
-    ...task, title: task.title.trim(), category: task.category.trim(),
-    due_date: task.dueDate, estimated_hours: task.estimatedHours
+    title: task.title.trim(), category: task.category.trim(),
+    description: task.description ?? null, due_date: task.dueDate,
+    estimated_hours: task.estimatedHours ?? null,
+    status: task.status === undefined ? "Planned" : task.status
   };
 }
 
 function createTimelineRoutes(db) {
   const router = express.Router();
+  router.use(express.json());
   const userId = 1; // Simulated active user; never accept ownership from the client.
   const repo = Object.fromEntries(Object.entries(createTimelineRepository(db))
     .map(([name, fn]) => [name, promisify(fn)]));
@@ -34,20 +37,21 @@ function createTimelineRoutes(db) {
   }));
 
   router.post("/", handle(async (req, res) => {
-    const data = req.body || {};
+    const data = req.body;
     const errors = validateTask(data);
-    if (data.status != null && data.status !== "Planned") {
+    if (data?.status !== undefined && data.status !== "Planned") {
       errors.push("New tasks must start in Planned status.");
     }
     if (errors.length) return res.status(400).json({ errors });
-    const id = await repo.createTask(userId, toStorage(data));
-    res.status(201).json(toApi(await repo.getTaskById(userId, id)));
+    const task = toStorage(data);
+    const id = await repo.createTask(userId, task);
+    res.status(201).json(toApi({ ...task, task_id: id, user_id: userId }));
   }));
 
   // Load only owned tasks for all existing single-task endpoints.
   router.param("id", (req, res, next, value) => {
     const id = Number(value);
-    if (!Number.isSafeInteger(id) || id <= 0) {
+    if (!/^[1-9]\d*$/.test(value) || !Number.isSafeInteger(id)) {
       return res.status(400).json({ error: "Invalid task ID." });
     }
     repo.getTaskById(userId, id).then(task => {
@@ -60,22 +64,40 @@ function createTimelineRoutes(db) {
   router.get("/:id", (req, res) => res.json(toApi(req.task)));
 
   router.put("/:id", handle(async (req, res) => {
-    const data = { ...req.body, status: req.body?.status ?? req.task.status };
+    if (!req.body || typeof req.body !== "object" || Array.isArray(req.body)) {
+      return res.status(400).json({ errors: ["Task data must be a JSON object."] });
+    }
+    const data = { ...req.body,
+      status: req.body.status === undefined ? req.task.status : req.body.status };
     const errors = validateTask(data);
     if (!canChangeStatus(req.task.status, data.status)) {
       errors.push("Invalid status transition.");
     }
     if (errors.length) return res.status(400).json({ errors });
-    await repo.updateTask(userId, req.task.task_id, toStorage(data));
-    res.json(toApi(await repo.getTaskById(userId, req.task.task_id)));
+    const task = toStorage(data);
+    task.completed_at = task.status === "Completed"
+      ? req.task.completed_at ?? new Date().toISOString() : null;
+    const changes = await repo.updateTask(userId, req.task.task_id, task);
+    if (!changes) return res.status(404).json({ error: "Task not found." });
+    res.json(toApi({ ...task, task_id: req.task.task_id, user_id: userId }));
   }));
 
   router.delete("/:id", handle(async (req, res) => {
-    await repo.deleteTask(userId, req.task.task_id);
+    const changes = await repo.deleteTask(userId, req.task.task_id);
+    if (!changes) return res.status(404).json({ error: "Task not found." });
     res.json({ ok: true });
   }));
 
   router.use((err, req, res, next) => {
+    if (err.type === "entity.parse.failed") {
+      return res.status(400).json({ error: "Request body must be valid JSON." });
+    }
+    if (err.type === "entity.too.large") {
+      return res.status(413).json({ error: "Request body is too large." });
+    }
+    if (err.status >= 400 && err.status < 500) {
+      return res.status(err.status).json({ error: "Invalid task request." });
+    }
     res.status(500).json({ error: "Unable to access tasks. Please try again." });
   });
   return router;
