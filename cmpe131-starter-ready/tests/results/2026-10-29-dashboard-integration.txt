@@ -1,0 +1,213 @@
+
+> cmpe131-starter@1.0.0 test
+> node --test
+
+TAP version 13
+# Subtest: TC-007/009: dashboard summarizes stored data for only the active student
+ok 1 - TC-007/009: dashboard summarizes stored data for only the active student
+  ---
+  duration_ms: 453.415878
+  type: 'test'
+  ...
+# Subtest: GET includes incomplete defaults; complete/repeat/reopen persist one row
+ok 2 - GET includes incomplete defaults; complete/repeat/reopen persist one row
+  ---
+  duration_ms: 754.884329
+  type: 'test'
+  ...
+# Subtest: missing, malformed and nonexistent question IDs are rejected without writes
+ok 3 - missing, malformed and nonexistent question IDs are rejected without writes
+  ---
+  duration_ms: 376.447192
+  type: 'test'
+  ...
+# Subtest: only boolean completion in an object is accepted; failures preserve all users
+ok 4 - only boolean completion in an object is accepted; failures preserve all users
+  ---
+  duration_ms: 204.766042
+  type: 'test'
+  ...
+# Subtest: simulated user ignores client ownership and other users keep separate progress
+ok 5 - simulated user ignores client ownership and other users keep separate progress
+  ---
+  duration_ms: 46.344984
+  type: 'test'
+  ...
+# Subtest: malformed/scalar/oversized JSON is controlled and never changes progress
+ok 6 - malformed/scalar/oversized JSON is controlled and never changes progress
+  ---
+  duration_ms: 95.3199
+  type: 'test'
+  ...
+# Subtest: failed SQLite upserts preserve rows; database read errors never expose internals
+ok 7 - failed SQLite upserts preserve rows; database read errors never expose internals
+  ---
+  duration_ms: 101.584327
+  type: 'test'
+  ...
+# Subtest: HTTP progress saves survive closing and reopening the application database
+ok 8 - HTTP progress saves survive closing and reopening the application database
+  ---
+  duration_ms: 114.934678
+  type: 'test'
+  ...
+# Subtest: catalog covers the four PRD topics with matching LeetCode links
+ok 9 - catalog covers the four PRD topics with matching LeetCode links
+  ---
+  duration_ms: 58.80913
+  type: 'test'
+  ...
+# Subtest: complete, repeat and reopen keep one row per user/question and isolate users
+ok 10 - complete, repeat and reopen keep one row per user/question and isolate users
+  ---
+  duration_ms: 46.496743
+  type: 'test'
+  ...
+# Subtest: unknown questions and invalid completion fail without changing progress
+ok 11 - unknown questions and invalid completion fail without changing progress
+  ---
+  duration_ms: 41.360775
+  type: 'test'
+  ...
+# Subtest: progress survives process restart and seeds do not duplicate or reset it
+ok 12 - progress survives process restart and seeds do not duplicate or reset it
+  ---
+  duration_ms: 274.039678
+  type: 'test'
+  ...
+# Subtest: production server mounts task JSON handling before the starter parser
+ok 13 - production server mounts task JSON handling before the starter parser
+  ---
+  duration_ms: 1636.222976
+  type: 'test'
+  ...
+# Subtest: tasks start Planned and change status only after creation
+ok 14 - tasks start Planned and change status only after creation
+  ---
+  duration_ms: 794.749851
+  type: 'test'
+  ...
+# Subtest: API create/list persists in SQLite across application restart
+ok 15 - API create/list persists in SQLite across application restart
+  ---
+  duration_ms: 673.78604
+  type: 'test'
+  ...
+# Subtest: invalid input and unowned IDs never change saved tasks
+ok 16 - invalid input and unowned IDs never change saved tasks
+  ---
+  duration_ms: 449.337687
+  type: 'test'
+  ...
+# Subtest: database errors return a controlled message
+ok 17 - database errors return a controlled message
+  ---
+  duration_ms: 55.72848
+  type: 'test'
+  ...
+# Subtest: TC-001/003/004/005: create, read, update, reopen and hard delete
+ok 18 - TC-001/003/004/005: create, read, update, reopen and hard delete
+  ---
+  duration_ms: 85.303734
+  type: 'test'
+  ...
+# Subtest: TC-009: every operation is scoped to the simulated user
+ok 19 - TC-009: every operation is scoped to the simulated user
+  ---
+  duration_ms: 23.940015
+  type: 'test'
+  ...
+# Subtest: missing IDs return undefined or zero without changing saved tasks
+ok 20 - missing IDs return undefined or zero without changing saved tasks
+  ---
+  duration_ms: 39.615626
+  type: 'test'
+  ...
+# Subtest: queries bind text and IDs as data and list tasks by due date
+ok 21 - queries bind text and IDs as data and list tasks by due date
+  ---
+  duration_ms: 32.975319
+  type: 'test'
+  ...
+# Subtest: constraint errors reach the caller and failed updates preserve data
+ok 22 - constraint errors reach the caller and failed updates preserve data
+  ---
+  duration_ms: 30.371766
+  type: 'test'
+  ...
+# Subtest: saved tasks survive process restart and repeated schema initialization
+ok 23 - saved tasks survive process restart and repeated schema initialization
+  ---
+  duration_ms: 523.764836
+  type: 'test'
+  ...
+# Subtest: service rejects invalid body shapes and permits only the SAD status matrix
+ok 24 - service rejects invalid body shapes and permits only the SAD status matrix
+  ---
+  duration_ms: 7.150743
+  type: 'test'
+  ...
+# Subtest: missing and invalid create/update fields leave every stored row unchanged
+ok 25 - missing and invalid create/update fields leave every stored row unchanged
+  ---
+  duration_ms: 1159.550475
+  type: 'test'
+  ...
+# Subtest: IDs must be positive decimal safe integers for read, update and delete
+ok 26 - IDs must be positive decimal safe integers for read, update and delete
+  ---
+  duration_ms: 293.353672
+  type: 'test'
+  ...
+# Subtest: client user IDs cannot expose or mutate another simulated user's task
+ok 27 - client user IDs cannot expose or mutate another simulated user's task
+  ---
+  duration_ms: 92.874991
+  type: 'test'
+  ...
+# Subtest: completion timestamps are server-owned, preserved on edits and cleared on reopening
+ok 28 - completion timestamps are server-owned, preserved on edits and cleared on reopening
+  ---
+  duration_ms: 119.027666
+  type: 'test'
+  ...
+# Subtest: malformed, scalar and oversized JSON return controlled errors without writes
+ok 29 - malformed, scalar and oversized JSON return controlled errors without writes
+  ---
+  duration_ms: 145.085537
+  type: 'test'
+  ...
+# Subtest: SQLite write failures are masked and preserve previously stored data
+ok 30 - SQLite write failures are masked and preserve previously stored data
+  ---
+  duration_ms: 89.232949
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3547.613418
+
+
+PASS: empty states, Create Task form, API persistence, stored task counts and safe text rendering
+PASS: completion removes upcoming task; reopening restores it and updates stored summary
+PASS: current Progress UI updates dashboard totals and actual server restart preserves summaries
+PASS: cancel/confirm deletion leaves/removes the stored task and dashboard count
+PASS: failed dashboard load clears loading, shows error; no browser JS errors
+
+
+Browser: Chromium 141.0.7390.37; isolated SQLite; Linux x64
+PASS: production registration, Dashboard navigation, labeled controls and incomplete defaults/user isolation
+PASS: all topic filters and All topics
+PASS: check saves, updates topic count/percentage and survives refresh
+PASS: completion and reopening survive real server restarts
+PASS: failed save rolls back checkbox/count, leaves DB unchanged and allows retry
+PASS: external new-tab URL is correct, link navigation does not change progress, other user unchanged
+PASS: failed catalog/progress loads show error and no editable unsaved defaults
+PASS: real-server malformed JSON returns controlled 400; no browser JavaScript errors
+External requests were intercepted; live LeetCode content was not tested.

@@ -35,41 +35,28 @@
     </h2>
   </div>
 
-  <div class="dashboard">
+  <main class="dashboard">
     <h1>Dashboard</h1>
-
-      <!--Progress Section-->
-      <div class="progressSection">
-        <h2>Progress</h2>
-        <a href="questions.html">Browse Question Map</a>
-        <p> Current LeetCode Task: </p>
-          <div class="progress-bar">
-          </div>
-
-          <p>Current Question Progress: %</p>
-          <a href="https://leetcode.com/accounts/login/" target="_blank">Go to LeetCode</a>
-      </div>
-
-      <!--Tasks Section-->
-      <div class="tasksSection">
-        <h2>Tasks</h2>
-          <ol>
-            <li></a></li>
-          </ol>
-          
-          <p>Create Task</p>
-      </div>
-
-      <!--Timeline Dashboard Section-->
-      <div class="timelineDashboardSection">
-        <h2>Timeline</h2>
-
-      </div>
-
-      <div class="section">
-      </div>
-  </div>
-
-  
+    <p>Simulated active student. Career goal/profile setup is a future feature.</p>
+    <p id="dashboardError" role="alert"></p>
+    <p id="dashboardLoading">Loading dashboard…</p>
+    <section>
+      <h2>Tasks</h2>
+      <p id="taskSummary"></p>
+      <a href="timeline.html#create">Create Task</a>
+      <a href="timeline.html">View / manage Timeline</a>
+    </section>
+    <section>
+      <h2>Upcoming Timeline tasks</h2>
+      <p id="upcomingEmpty"></p>
+      <ul id="upcomingTasks"></ul>
+    </section>
+    <section>
+      <h2>Coding progress (manually reported)</h2>
+      <p id="codingSummary"></p>
+      <a href="questions.html">Browse Question Map</a>
+    </section>
+  </main>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>
