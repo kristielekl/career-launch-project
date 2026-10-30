@@ -20,6 +20,7 @@
   <hr id="headerline">
   
   <div class="resources-container">
+    <p id="resourceError" role="alert" hidden>This resource is unavailable. Please choose another resource.</p>
     <div class="sjsu-resources">
       <h1>
           SJSU's Career Resources
@@ -42,7 +43,7 @@
             prepare for a full-time job after graduation. 
           </p>
           <p>It is also great for making connections with previous alumni and employers interested in hiring SJSU graduates.</p>
-          <a href="https://joinhandshake.com/" target="blank" class="button-link">Go to Handshake</a>
+          <a href="https://joinhandshake.com/" target="_blank" class="button-link">Go to Handshake</a>
         <h2>Hiration</h2>
           <p>A comprehensive application made to help you improve your interview skills with feedback powered by AI.</p>
           <p>Fully customizable and provides tons of useful feedback in preparing you for your future interviews.</p>
@@ -56,6 +57,22 @@
     </div>
     </div>
   </div>
-  
+  <script>
+    document.querySelector('.resources-container').addEventListener('click', (event) => {
+      const link = event.target.closest('a');
+      if (!link) return;
+      const error = document.getElementById('resourceError');
+      try {
+        const url = new URL(link.getAttribute('href'));
+        if (url.protocol !== 'https:' || !['careercenter.sjsu.edu', 'joinhandshake.com', 'www.hiration.com', 'www.theforage.com'].includes(url.hostname)) {
+          throw new Error('Invalid resource URL');
+        }
+        error.hidden = true;
+      } catch {
+        event.preventDefault();
+        error.hidden = false;
+      }
+    });
+  </script>
 </body>
 </html>
