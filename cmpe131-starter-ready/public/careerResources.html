@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Career Resources Page</title>
+  <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
+</head>
+<body>
+  <nav>
+    <div class="navigation-headings">
+      <h1><a href="index.html" class="navigation" id="titletext">CareerLaunch</a></h1>
+      <h2><a href="index.html" class="navigation" id="maintext">Main Page</a></h2>
+      <h2><a href="dashboard.html" class="navigation" id="dashboardtext">Dashboard</a></h2>
+      <h2><a href="timeline.html" class="navigation" id="navigationtext">Timeline</a></h2>
+      <h2><a href="careerResources.html" class="navigation">Career Resources</a></h2>
+      <h2><a href="login.html" class="navigation" id="logintext">Login</a></h2>
+    </div>
+  </nav>
+
+  <hr id="headerline">
+  
+  <div class="resources-container">
+    <p id="resourceError" role="alert" hidden>This resource is unavailable. Please choose another resource.</p>
+    <div class="sjsu-resources">
+      <h1>
+          SJSU's Career Resources
+      </h1>
+          <p> 
+            SJSU offers a vast amount of resources to help students with preparing for life after colleges. The resources there can help with finding and preparing for employment, 
+            in addition to creating meaningful connections towards success in their futures.
+          </p>
+
+          <p>Many of the resources below are just some of the important resources that we believe will help students succeed the most in their future.</p>
+          <p><a href="https://careercenter.sjsu.edu/" target="_blank">Career Center</a></p>
+          <p><a href="https://careercenter.sjsu.edu/resources/resume-cover-letter-guide/" target="_blank">Resume, CV & Cover Letter Guide</a></p>
+          <p><a href="https://careercenter.sjsu.edu/resources/interviewing-guide/" target="_blank">Interviewing Guide</a></p>
+    <div class="digital-career-tools">
+        <h1>
+            SJSU's Digital Career Tools
+        </h1>
+        <h2>Handshake</h2>
+          <p>San Jose State University utilizes this as one of their official career platforms, making searching for employment, applying for internships, and helping students to
+            prepare for a full-time job after graduation. 
+          </p>
+          <p>It is also great for making connections with previous alumni and employers interested in hiring SJSU graduates.</p>
+          <a href="https://joinhandshake.com/" target="_blank" class="button-link">Go to Handshake</a>
+        <h2>Hiration</h2>
+          <p>A comprehensive application made to help you improve your interview skills with feedback powered by AI.</p>
+          <p>Fully customizable and provides tons of useful feedback in preparing you for your future interviews.</p>
+          <a href="https://www.hiration.com/" target="_blank" class="button-link">Go to Hiration</a>
+        <h2>The Forage</h2>
+          <p>
+            Free virtual job simulatinos that help the individual to develop the necessary skills needed for interviews to improve confidence and develop practical skills in prepartion
+            for future employment.
+          </p>
+          <a href="https://www.theforage.com/" target="_blank" class="button-link">Go to The Forage</a>
+    </div>
+    </div>
+  </div>
+  <script>
+    document.querySelector('.resources-container').addEventListener('click', (event) => {
+      const link = event.target.closest('a');
+      if (!link) return;
+      const error = document.getElementById('resourceError');
+      try {
+        const url = new URL(link.getAttribute('href'));
+        if (url.protocol !== 'https:' || !['careercenter.sjsu.edu', 'joinhandshake.com', 'www.hiration.com', 'www.theforage.com'].includes(url.hostname)) {
+          throw new Error('Invalid resource URL');
+        }
+        error.hidden = true;
+      } catch {
+        event.preventDefault();
+        error.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>
