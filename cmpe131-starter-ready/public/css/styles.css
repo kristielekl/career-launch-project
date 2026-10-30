@@ -168,3 +168,32 @@ body {
 #timelineHeader {
     font-size: 30px;
 }
+
+/* Resources Page */
+.resources-container {
+    border: 3px solid #ccc;
+    background: #f0f5f3;
+    padding-bottom: 2rem;
+}
+
+.resources-container .resource-links {
+    font-size: 1.5rem;
+    padding-left: 1rem;
+}
+
+.resources-container, .resources-container h1, .resources-container h2, .resources-container p {
+    padding-left: 0.5rem;
+}
+
+.resources-container .button-link {
+    background-color: rgb(102,102,249);
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    padding: 10px;
+}
+
+.resources-container .button-link:hover {
+    background-color: rgb(102,122,249);
+}
