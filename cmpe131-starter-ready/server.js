@@ -1,16 +1,12 @@
 const express = require("express");
 const path = require("path");
 const { openDb } = require("./db");
-const { createProgressRoutes } = require("./routes/progressRoutes");
 
 const app = express();
 const db = openDb();
 const { createTimelineRoutes } = require("./routes/timelineRoutes");
-<<<<<<< HEAD
-=======
-app.use("/api/progress", createProgressRoutes(db));
->>>>>>> d13b0ac0e93e12b58c7ece833e7d688b548a1aeb
 const questionRoutes = require("./routes/questionRoutes");
+const { createProgressRoutes } = require("./routes/progressRoutes");
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
