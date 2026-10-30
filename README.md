@@ -8,7 +8,7 @@ FOLDER STRUCTURE
 This shows a basic ROUGH format of the folders and files in the project with a brief ideas of what it MAY be used for. They can be subject to change or reorangized as needed. Devs may create or delete files or folders as needed. 
 It is recommended to update README.md on current structure.
 
-
+~~~bash
 career-launch-project/
 │
 ├── README.md                       # Main GitHub project documentation
@@ -64,3 +64,4 @@ career-launch-project/
     ├── .gitignore                  # Optional application-specific Git rules
     │
     └── node_modules/               # Installed npm packages (DO NOT COMMIT)
+~~~
