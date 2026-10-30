@@ -48,6 +48,9 @@ const ALLOWED_TRANSITIONS = {
  */
 function validateTask(data) {
   const errors = [];
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return ["Task data must be a JSON object."];
+  }
 
   // Check whether the task has a valid title.
   if (typeof data.title !== "string" ||
@@ -88,7 +91,7 @@ function validateTask(data) {
   }
 
   // A new task defaults to Planned if no status is given.
-  const status = data.status ?? "Planned";
+  const status = data.status === undefined ? "Planned" : data.status;
 
   // Reject any status outside the approved list.
   if (!VALID_STATUSES.includes(status)) {
