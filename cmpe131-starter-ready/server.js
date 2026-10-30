@@ -13,11 +13,7 @@ app.use("/api/tasks", createTimelineRoutes(db));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/questions", questionRoutes(db));
-<<<<<<< HEAD
-app.use("/api/progress", createProgressRoutes(db));
-=======
 app.use("/api/dashboard", require("./routes/dashboardRoutes")(db));
->>>>>>> e286321f934670ec7fbefc38b88b44826472b320
 
 // Health check
 app.get("/api/health", (req, res) => {
