@@ -137,4 +137,6 @@ test("HTTP progress saves survive closing and reopening the application database
   await second.close();
   const third = await start(t, filename);
   assert.equal((await third.send()).body.find(row => row.questionId === 1).completed, false);
+  // Close before cleanup: Windows cannot delete an open SQLite file (EBUSY).
+  await third.close();
 });

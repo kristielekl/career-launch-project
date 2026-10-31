@@ -197,3 +197,227 @@ body {
 .resources-container .button-link:hover {
     background-color: rgb(102,122,249);
 }
+
+/* Dashboard Page (all rules scoped to .dashboard so other pages are unaffected) */
+.dashboard {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: #1f2937;
+    padding: 1rem 0 2rem;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+.dashboard-subtitle {
+    margin: 0.25rem 0 0;
+    color: #6b7280;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.dashboard-button {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    color: #1f2937;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.dashboard-button:hover {
+    background: #f3f4f6;
+}
+
+.dashboard-button.primary {
+    background: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+}
+
+.dashboard-button.primary:hover {
+    background: #45a049;
+}
+
+.dashboard-error:not(:empty) {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+}
+
+.dashboard-loading {
+    color: #6b7280;
+}
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-left: 5px solid #9ca3af;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.stat-card.planned { border-left-color: rgb(102,102,249); }
+.stat-card.in-progress { border-left-color: #f59e0b; }
+.stat-card.completed { border-left-color: #4CAF50; }
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.stat-value {
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.dashboard-note {
+    color: #6b7280;
+    margin: 0.75rem 0 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+.dashboard-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 1.25rem 1.5rem;
+}
+
+.dashboard-card h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+}
+
+.dashboard-empty:empty {
+    display: none;
+}
+
+.dashboard-empty {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.upcoming-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+
+.upcoming-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.upcoming-item:last-child {
+    border-bottom: none;
+}
+
+.upcoming-title {
+    display: block;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.upcoming-due {
+    display: block;
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.status-badge {
+    flex-shrink: 0;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.status-badge.planned { background: #eef0ff; color: rgb(72,72,200); }
+.status-badge.in-progress { background: #fef3c7; color: #92400e; }
+.status-badge.completed { background: #dcfce7; color: #166534; }
+
+.coding-percent {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem;
+}
+
+.progress-track {
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: #4CAF50;
+    transition: width 0.4s ease;
+}
+
+.dashboard-hint {
+    font-size: 0.85rem;
+    color: #9ca3af;
+}
+
+.card-link {
+    color: rgb(72,72,200);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.card-link:hover {
+    text-decoration: underline;
+}
+
+.dashboard-footnote {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: #9ca3af;
+}

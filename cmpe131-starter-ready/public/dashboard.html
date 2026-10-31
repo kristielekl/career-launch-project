@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard Page</title>
   <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
 </head>
@@ -18,26 +19,66 @@
   </nav>
 
   <main class="dashboard">
-    <h1>Dashboard</h1>
-    <p>Simulated active student. Career goal/profile setup is a future feature.</p>
-    <p id="dashboardError" role="alert"></p>
-    <p id="dashboardLoading">Loading dashboard…</p>
-    <section>
-      <h2>Tasks</h2>
-      <p id="taskSummary"></p>
-      <a href="timeline.html#create">Create Task</a>
-      <a href="timeline.html">View / manage Timeline</a>
+    <!-- Page header with quick actions -->
+    <header class="dashboard-header">
+      <div>
+        <h1>Dashboard</h1>
+        <p class="dashboard-subtitle">Your career preparation at a glance.</p>
+      </div>
+      <div class="dashboard-actions">
+        <a href="timeline.html#create" class="dashboard-button primary">Create Task</a>
+        <a href="timeline.html" class="dashboard-button">View / Manage Timeline</a>
+      </div>
+    </header>
+
+    <p id="dashboardError" class="dashboard-error" role="alert"></p>
+    <p id="dashboardLoading" class="dashboard-loading">Loading dashboard…</p>
+
+    <!-- Task counts -->
+    <section class="dashboard-stats" aria-label="Task summary">
+      <div class="stat-card">
+        <span class="stat-label">Total Tasks</span>
+        <span class="stat-value" id="statTotal">–</span>
+      </div>
+      <div class="stat-card planned">
+        <span class="stat-label">Planned</span>
+        <span class="stat-value" id="statPlanned">–</span>
+      </div>
+      <div class="stat-card in-progress">
+        <span class="stat-label">In Progress</span>
+        <span class="stat-value" id="statInProgress">–</span>
+      </div>
+      <div class="stat-card completed">
+        <span class="stat-label">Completed</span>
+        <span class="stat-value" id="statCompleted">–</span>
+      </div>
     </section>
-    <section>
-      <h2>Upcoming Timeline tasks</h2>
-      <p id="upcomingEmpty"></p>
-      <ul id="upcomingTasks"></ul>
-    </section>
-    <section>
-      <h2>Coding progress (manually reported)</h2>
-      <p id="codingSummary"></p>
-      <a href="questions.html">Browse Question Map</a>
-    </section>
+    <p id="taskSummary" class="dashboard-note"></p>
+
+    <div class="dashboard-grid">
+      <!-- Next unfinished tasks -->
+      <section class="dashboard-card">
+        <h2>Upcoming Timeline Tasks</h2>
+        <p id="upcomingEmpty" class="dashboard-empty"></p>
+        <ul id="upcomingTasks" class="upcoming-list"></ul>
+        <a href="timeline.html" class="card-link">See all tasks →</a>
+      </section>
+
+      <!-- Coding progress from the Question Map -->
+      <section class="dashboard-card">
+        <h2>Coding Progress</h2>
+        <p class="coding-percent" id="codingPercent">0%</p>
+        <div class="progress-track" role="progressbar" aria-label="Coding questions completed"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="codingBar">
+          <div class="progress-fill" id="codingFill"></div>
+        </div>
+        <p id="codingSummary"></p>
+        <p class="dashboard-hint">Progress is self-reported from the Question Map.</p>
+        <a href="questions.html" class="card-link">Browse Question Map</a>
+      </section>
+    </div>
+
+    <p class="dashboard-footnote">Simulated active student. Career goal/profile setup is a future feature.</p>
   </main>
   <script src="js/dashboard.js"></script>
 </body>
