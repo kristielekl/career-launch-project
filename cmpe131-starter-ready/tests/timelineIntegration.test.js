@@ -20,6 +20,7 @@ async function start(filename) {
   app.use("/api/tasks", createTimelineRoutes(db));
   const server = app.listen(0, "127.0.0.1");
   await new Promise(resolve => server.once("listening", resolve));
+  let closed = false;
   return {
     db,
     async send(method = "GET", suffix = "", body) {
@@ -29,6 +30,8 @@ async function start(filename) {
       return { status: response.status, body: await response.json() };
     },
     async close() {
+      if (closed) return; // Safe to call twice (explicit close + t.after cleanup).
+      closed = true;
       await new Promise(resolve => server.close(resolve));
       await promisify(db.close.bind(db))();
     }
@@ -53,6 +56,8 @@ test("API create/list persists in SQLite across application restart", async t =>
   app = await start(filename);
   assert.deepEqual((await app.send()).body, [created.body]);
   assert.deepEqual((await app.send("GET", "/1")).body, created.body);
+  // Close before cleanup: Windows cannot delete an open SQLite file (EBUSY).
+  await app.close();
 });
 
 test("invalid input and unowned IDs never change saved tasks", async t => {
