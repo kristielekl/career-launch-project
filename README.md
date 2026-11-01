@@ -12,19 +12,21 @@ It is recommended to update README.md on current structure.
 career-launch-project/
 │
 ├── README.md                       # Main GitHub project documentation
-├─
+|
 │
 └── cmpe131-starter-ready/            # provided by professor
     │
     ├── public/                     # PRESENTATION / UI LAYER
     │   │                           
     │   │
-    │   ├── index.html              # Dashboard / homepage   (starter-folder provided)
-    │   ├── timeline.html           # TimelineTask list and status controls
-    │   ├── create.html             # Create TimelineTask form ( starter-folder provided)    
+    │   ├── index.html              # Homepage (starter-folder provided)
+    │   ├── create.html             # Create TimelineTask form ( starter-folder provided)
     │   ├── edit.html               # Edit TimelineTask form  (starter-folder provided)
-    │   ├── question-map.html       # Coding questions organized by topic
-    │   ├── resources.html          # Career Resources page
+    │   ├── timeline.html           # TimelineTask list and status controls
+    │   ├── dashboard.html          # Dashboard Page
+    │   ├── questions.html          # Coding questions organized by topic
+    │   ├── careerResources.html    # Career Resources page
+    │   ├── login.html              # Login page
     │   │
     │   ├── css/
     │   │   └── styles.css          # Shared page styling
