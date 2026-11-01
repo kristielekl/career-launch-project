@@ -12,7 +12,7 @@ It is recommended to update README.md on current structure.
 career-launch-project/
 │
 ├── README.md                       # Main GitHub project documentation
-|
+│
 │
 └── cmpe131-starter-ready/            # provided by professor
     │
