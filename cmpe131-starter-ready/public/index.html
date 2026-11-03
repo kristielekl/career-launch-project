@@ -19,30 +19,25 @@
 
   <hr id="headerline">
   
-  <p>This is the main page</p>
-
-  <!--The following is the script from the original starter-->
-  <script>
-    async function load() {
-      const res = await fetch("/api/appointments");
-      const items = await res.json();
-      const ul = document.getElementById("list");
-      ul.innerHTML = "";
-
-      items.forEach(a => {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <b>#${a.id}</b> ${a.customerName} - ${a.service} (${a.date} ${a.time})
-          <a href="/edit.html?id=${a.id}">edit</a>
-        `;
-        ul.appendChild(li);
-      });
-    }
-
-    document.getElementById("refreshBtn").addEventListener("click", load);
-    load();
-  </script>
-
-  
+  <div class="main-page-description">
+    <h1> Welcome to CareerLaunch!</h1>
+    <p>This is an application made for SJSU Students Studying Computer Science/Software Engineering/Computer Engineering (CS/SE/CMPE).</p>
+    <p>Feel free to take a look at the different web pages for this application and you can refer to the quick overview of all the pages as follows:</p>
+    <h2>Dashboard</h2>
+      <p>The dashboard is implemented to let you see the total number of tasks that you have created as well as their categorized current state:</p>
+      <ul>
+        <li>Planned</li>
+        <li>In Progress</li>
+        <li>Completed</li>
+      </ul>
+      <img src="css/images/dashboardimage.png">
+      <p>You can also view all of your current Upcoming Timeline Tasks, by clicking on the <a href="timeline.html"> See all tasks</a> hyperlink to redirect you to the Timeline page</p>
+    <h2>Timeline</h2>
+      <p>You can create a task under the following different categories, and it will automatically be updated on the dashboard as shown above under the Dashboard section:</p>
+      <img src="css/images/taskcreationimage.png">
+      <p>Once a timeline task is created, it will automatically update your user dashboard, but it will still allow the user to make changes to the task if any of the tasks need to be adjusted</p>
+    <h2>SJSU and Resources</h2>
+      <p>SJSU actually provides a lot of career preparation resources that many students may not be aware of. SJSU actually utilizes some of the following applications to help with career development.</p>
+  </div>
 </body>
 </html>

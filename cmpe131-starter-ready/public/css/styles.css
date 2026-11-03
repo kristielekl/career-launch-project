@@ -45,6 +45,20 @@ body {
     width: 150%;
 }
 
+/* Main Home Page */
+.main-page-description h1,h2 {
+    display: flex;
+}
+
+.main-page-description p {
+    display: inline;
+}
+
+.main-page-description img {
+    border: 3px solid gray;
+    border-radius: 10px;
+}
+
 /* Login Page */
 .login-container {
     background-color: white;
@@ -143,7 +157,7 @@ body {
     padding-bottom: 5px;
 }
 
-#taskCreationForm button {
+#taskCreationForm button, #taskList button {
     padding: 10px 20px;
     margin-top: 15px;
     border: none;
@@ -153,7 +167,7 @@ body {
     font-size: 15px;
 }
 
-#taskCreationForm button:hover {
+#taskCreationForm button:hover, #taskList button:hover {
     background-color: #45a049;
 }
 
@@ -167,6 +181,13 @@ body {
 
 #timelineHeader {
     font-size: 30px;
+}
+
+/* Timeline Tasks */
+#taskList li {
+    color: inherit;
+    font-size: 1.25rem;
+    font-weight: bold;
 }
 
 /* Resources Page */
