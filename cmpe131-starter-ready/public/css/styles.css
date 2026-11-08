@@ -1,8 +1,6 @@
 /* HTML, Body Elements */
-body {
-    min-width: 300px;
-    max-width: 1200px;
-    overflow-x: auto;
+html {
+    font-family: 'Times New Roman', Times, serif;
 }
 
 /* Navigation Header */
@@ -20,8 +18,8 @@ body {
 .navigation-headings {
     display: flex;
     align-items: center;
-    gap: 8rem;
-    max-width: 1500px;
+    gap: 3rem;
+    max-width: 100%;
 }
 
 #titletext {
@@ -29,14 +27,10 @@ body {
     text-decoration: none;
 }
 
-#logintext {
-    padding-left: 400px;
-}
-
 #headerline {
     border: 2px solid #0001;
     padding-bottom: -20px;
-    width: 150%;
+    width: 100%;
 }
 
 /* Main Home Page */
@@ -54,9 +48,8 @@ body {
     padding: 100px;
     border-radius: 25px;
     box-shadow: 0 0 10px rgba(0,0,0,1);
-    max-width: 800px;
-    width: 100%;
-    margin: 5rem 35rem;
+    width: 75%;
+    margin-top: 2rem;
 }
 
 .login-container h2 {
