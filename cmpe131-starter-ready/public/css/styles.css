@@ -29,12 +29,6 @@ body {
     text-decoration: none;
 }
 
-#externalicon {
-    width: 1em;
-    height: 1em;
-    transform: translate(0em, 0.25em);
-}
-
 #logintext {
     padding-left: 400px;
 }
@@ -52,11 +46,6 @@ body {
 
 .main-page-description p {
     display: inline;
-}
-
-.main-page-description img {
-    border: 3px solid gray;
-    border-radius: 10px;
 }
 
 /* Login Page */
