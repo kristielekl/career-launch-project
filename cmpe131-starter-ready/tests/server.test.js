@@ -45,6 +45,17 @@ test("production server mounts task JSON handling before the starter parser", as
   const base = `http://127.0.0.1:${port}`;
   assert.equal((await fetch(base + "/api/health")).status, 200);
   assert.equal((await fetch(base + "/timeline.html")).status, 200);
+  // Issue #68: the demo entry must not submit credentials to the missing /login route.
+  const login = await fetch(base + "/login.html");
+  assert.equal(login.status, 200);
+  const html = await login.text();
+  assert.match(html, /No account or signup is needed/);
+  assert.doesNotMatch(html, /<form\b|<input\b/);
+  const demoLink = html.match(/href="([^"]+)">Continue to Demo<\/a>/);
+  assert.ok(demoLink, "demo entry links to a working page");
+  const dashboard = await fetch(new URL(demoLink[1], login.url));
+  assert.equal(dashboard.status, 200);
+  assert.match(await dashboard.text(), /<title>Dashboard/);
   const response = await fetch(base + "/api/tasks", { method: "POST",
     headers: { "Content-Type": "application/json" }, body: '{"title":' });
   assert.equal(response.status, 400);

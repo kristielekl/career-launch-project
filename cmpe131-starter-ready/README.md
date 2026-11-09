@@ -27,6 +27,10 @@ A tiny, process-friendly starter that demonstrates **UI → API → Database** f
 
    - http://localhost:3000
 
+The Login page offers **Continue to Demo**, which opens the dashboard without
+credentials. Accounts and signup are not implemented; all visitors use the same
+simulated user and share progress.
+
 ## Folder responsibilities
 
 - `public/`: browser HTML, inline JavaScript, CSS, and images, served by Express.
