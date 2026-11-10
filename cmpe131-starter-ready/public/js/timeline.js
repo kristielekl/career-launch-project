@@ -3,6 +3,8 @@ const errorMessage = document.getElementById("taskError");
 const list = document.getElementById("taskList");
 const emptyMessage = document.getElementById("taskEmpty");
 const submitButton = document.getElementById("taskCreationSubmitButton");
+const formHeading = document.getElementById("taskFormHeading");
+const timeline = document.getElementById("taskTimeline");
 let editingTask = null;
 let busy = false;
 
@@ -18,19 +20,24 @@ async function request(options, id = "") {
 async function loadTasks() {
   const tasks = await request();
   list.replaceChildren();
+  renderTimeline(tasks);
   emptyMessage.textContent = tasks.length ? "" : "No tasks yet. Create a task to get started.";
   for (const task of tasks) {
     const item = document.createElement("li");
     item.textContent = `${task.title} — ${task.category} — Due: ${task.dueDate} — ${task.status}`
       + (task.estimatedHours == null ? "" : ` — ${task.estimatedHours} hours`)
       + (task.description ? ` — ${task.description}` : "");
+    const actions = document.createElement("div");
+    actions.className = "task-actions";
+    item.append(actions);
     list.append(item);
     function addButton(label, action) {
       const button = document.createElement("button");
       button.type = "button";
       button.textContent = label;
+      button.className = `action-${label.toLowerCase()}`;
       button.onclick = action;
-      item.append(" ", button);
+      actions.append(button);
     }
     addButton("Edit", () => {
       closeForm();
@@ -42,6 +49,7 @@ async function loadTasks() {
       fields.description.value = task.description ?? "";
       fields.estimatedHours.value = task.estimatedHours ?? "";
       submitButton.textContent = "Save";
+      formHeading.textContent = "Edit task";
       form.style.display = "block";
       fields.taskTitle.focus();
       updateButtons();
@@ -59,6 +67,35 @@ async function loadTasks() {
     });
   }
   updateButtons();
+}
+
+function renderTimeline(tasks) {
+  timeline.replaceChildren();
+  document.getElementById("timelineOverview").hidden = tasks.length === 0;
+  const sorted = [...tasks].sort((a, b) => a.dueDate.localeCompare(b.dueDate) || a.id - b.id);
+  for (const task of sorted) {
+    const item = document.createElement("li");
+    const statusClass = task.status.toLowerCase().replaceAll(" ", "-");
+    item.className = `timeline-event ${statusClass}`;
+    const date = document.createElement("time");
+    date.className = "timeline-date";
+    date.dateTime = task.dueDate;
+    // Keep date-only values independent of local time-zone calendar changes.
+    const [year, month, day] = task.dueDate.split("-").map(Number);
+    const dueDate = new Date(0);
+    dueDate.setUTCFullYear(year, month - 1, day);
+    date.textContent = dueDate.toLocaleDateString(undefined, {
+      month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
+    });
+    const title = document.createElement("span");
+    title.className = "timeline-title";
+    title.textContent = task.title;
+    const badge = document.createElement("span");
+    badge.className = `status-badge ${statusClass}`;
+    badge.textContent = task.status;
+    item.append(date, title, badge);
+    timeline.append(item);
+  }
 }
 
 function updateButtons() {
@@ -90,6 +127,7 @@ function closeForm() {
   form.reset();
   editingTask = null;
   submitButton.textContent = "Submit";
+  formHeading.textContent = "Create a task";
   form.style.display = "none";
   errorMessage.textContent = "";
   updateButtons();
