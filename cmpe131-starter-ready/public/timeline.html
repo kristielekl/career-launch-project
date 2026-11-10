@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,8 @@
     <div class="navigation-headings">
       <h1><a href="index.html" class="navigation" id="titletext">CareerLaunch</a></h1>
       <h2><a href="dashboard.html" class="navigation" id="dashboardtext">Dashboard</a></h2>
-      <h2><a href="timeline.html" class="navigation" id="navigationtext">Timeline</a></h2>
+      <h2><a href="timeline.html" class="navigation" id="navigationtext" aria-current="page">Timeline</a></h2>
+      <h2><a href="questions.html" class="navigation">Question Map</a></h2>
       <h2><a href="careerResources.html" class="navigation">Career Resources</a></h2>
       <h2><a href="login.html" class="navigation" id="logintext">Login</a></h2>
     </div>
@@ -20,13 +21,14 @@
   <hr id="headerline">
 
   <h2 id="timelineHeader">Timeline</h2>
-  <hr>
+  <p>Plan your next steps and track your progress by due date.</p>
 
   <!--Create Task Button Shows the Task Creation Menu-->
   <button id="taskCreationOpenButton">Create a Task</button>
   
   <div class="taskcreation-container">
-    <form id="taskCreationForm" action="/api/tasks" method="post">
+    <form id="taskCreationForm" aria-labelledby="taskFormHeading" action="/api/tasks" method="post">
+      <h3 id="taskFormHeading">Create a task</h3>
       <label for="taskTitle">Task Name (required):</label>
       <input type="text" id="taskTitle" name="taskTitle" placeholder="Enter Task Name" required>
 
@@ -34,7 +36,7 @@
       <input type="text" id="category" name="category" placeholder="Enter Category of Task" required>
 
       <label for="dueDate">Due Date (required):</label>
-      <input type="date" id="dueDate" value="2001-01-01" name="dueDate" required>
+      <input type="date" id="dueDate" name="dueDate" required>
 
       <label for="estimatedHours">Estimated Hours:</label>
       <input type="number" id="estimatedHours" name="estimatedHours" placeholder="Enter Estimated Hours" min="0" step="any">
@@ -50,6 +52,11 @@
 
   <p id="taskError" role="alert"></p>
   <p id="taskEmpty">Loading tasks…</p>
+  <section id="timelineOverview" aria-labelledby="dueDateHeading" hidden>
+    <h2 id="dueDateHeading">By due date</h2>
+    <ol id="taskTimeline" class="task-timeline" aria-label="Tasks by due date"></ol>
+  </section>
+  <h2>All tasks</h2>
   <ul id="taskList" aria-label="Saved tasks"></ul>
   <script src="js/timeline.js"></script>
 </body>
