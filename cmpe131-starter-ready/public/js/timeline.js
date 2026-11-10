@@ -80,12 +80,12 @@ function renderTimeline(tasks) {
     const date = document.createElement("time");
     date.className = "timeline-date";
     date.dateTime = task.dueDate;
-    // Parse as local calendar components so dates never shift with the time zone.
+    // Keep date-only values independent of local time-zone calendar changes.
     const [year, month, day] = task.dueDate.split("-").map(Number);
-    const dueDate = new Date();
-    dueDate.setFullYear(year, month - 1, day);
+    const dueDate = new Date(0);
+    dueDate.setUTCFullYear(year, month - 1, day);
     date.textContent = dueDate.toLocaleDateString(undefined, {
-      month: "short", day: "numeric", year: "numeric"
+      month: "short", day: "numeric", year: "numeric", timeZone: "UTC"
     });
     const title = document.createElement("span");
     title.className = "timeline-title";

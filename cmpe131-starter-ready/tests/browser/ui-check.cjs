@@ -88,6 +88,18 @@ const path = require("node:path");
     await task.getByRole("button", { name: "Delete", exact: true }).click();
     await page.waitForFunction(() => document.querySelectorAll("#taskTimeline li").length === 1);
     console.log("PASS: task create, edit, cancel, start, complete, reopen, confirmed delete, sorted timeline, safe text");
+    const apia = await browser.newContext({ timezoneId: "Pacific/Apia", locale: "en-US" });
+    const calendarPage = await apia.newPage();
+    await calendarPage.route("**/api/tasks", route => route.fulfill({ json: [
+      { id: 1, title: "Historical date", category: "Career prep", dueDate: "2011-12-30", status: "Planned" },
+      { id: 2, title: "Early year", category: "Career prep", dueDate: "0099-07-01", status: "Planned" }
+    ] }));
+    await calendarPage.goto(base + "/timeline.html");
+    await calendarPage.locator("#taskTimeline li").nth(1).waitFor();
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="2011-12-30"]').textContent(), "Dec 30, 2011");
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="0099-07-01"]').textContent(), "Jul 1, 99");
+    await apia.close();
+    console.log("PASS: calendar dates retain their day and early year in Pacific/Apia");
     await page.goto(base + "/dashboard.html");
     await page.goto(base + "/timeline.html#create");
     assert.equal(await page.locator("#taskCreationForm").isVisible(), true);
