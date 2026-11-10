@@ -14,3 +14,16 @@ Keep manual scenarios and test results here as Markdown when automation is not
 available, recording inputs, expected and actual results, and the tested commit.
 For Timeline Create/View, also check the empty state, Cancel, submit, validation
 messages, and saved tasks after browser refresh and application restart.
+
+## Optional UI browser check
+
+Provide Playwright externally (no app dependency is needed), then run:
+
+```sh
+NODE_PATH=/path/to/playwright/node_modules node tests/browser/ui-check.cjs
+```
+
+Set `CHROMIUM_PATH` if using an existing Chromium executable. The check starts an
+isolated server and database, verifies task controls and timeline ordering, question
+progress, appointment forms, and navigation/layout at phone, tablet, and desktop
+widths. It removes its temporary data afterward.
