@@ -8,6 +8,16 @@ const { validateTask, canChangeStatus } = require("../services/timelineService")
 
 const fields = { title: "Prepare resume", category: "Career", dueDate: "2026-11-01" };
 
+test("estimated hours remain optional and allow values from zero through 999", () => {
+  for (const estimatedHours of [undefined, null, 0, 0.5, 998.99, 999]) {
+    assert.deepEqual(validateTask({ ...fields, estimatedHours }), []);
+  }
+  for (const estimatedHours of [999.01, 1000, 1000000]) {
+    assert.ok(validateTask({ ...fields, estimatedHours })
+      .includes("Estimated hours must not exceed 999."));
+  }
+});
+
 async function setup(t) {
   const db = openDb(":memory:");
   const app = express();
@@ -31,6 +41,27 @@ async function setup(t) {
     }
   };
 }
+
+test("hour limit applies to create and update without changing rows on rejection", async t => {
+  const api = await setup(t);
+  const created = await api.send("POST", "", { ...fields, estimatedHours: 999 });
+  assert.equal(created.status, 201);
+  assert.equal(created.body.estimatedHours, 999);
+  const path = `/${created.body.id}`;
+  assert.equal((await api.send("PUT", path, { ...fields, estimatedHours: 998.99 })).status, 200);
+  assert.equal((await api.send("PUT", path, { ...fields, estimatedHours: 999 })).status, 200);
+  const before = await api.rows();
+  for (const estimatedHours of [999.01, 1000, 1000000]) {
+    for (const [method, suffix] of [["POST", ""], ["PUT", path]]) {
+      const response = await api.send(method, suffix, { ...fields, estimatedHours });
+      assert.equal(response.status, 400);
+      assert.ok(response.body.errors.includes("Estimated hours must not exceed 999."));
+      assert.deepEqual(await api.rows(), before);
+    }
+  }
+  assert.equal((await api.send("PUT", path, { ...fields, estimatedHours: null })).status, 200);
+  assert.equal((await api.send("GET", path)).body.estimatedHours, null);
+});
 
 test("service rejects invalid body shapes and permits only the SAD status matrix", () => {
   for (const body of [undefined, null, [], "task", 42, true]) {

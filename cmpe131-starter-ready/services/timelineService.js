@@ -78,12 +78,14 @@ function validateTask(data) {
     }
   }
 
-  // Estimated hours are optional, but must be nonnegative.
+  // Estimated hours are optional, but must be between 0 and 999.
   if (data.estimatedHours != null &&
       (typeof data.estimatedHours !== "number" ||
        !Number.isFinite(data.estimatedHours) ||
        data.estimatedHours < 0)) {
     errors.push("Estimated hours must be nonnegative.");
+  } else if (data.estimatedHours > 999) {
+    errors.push("Estimated hours must not exceed 999.");
   }
 
   if (data.description != null && typeof data.description !== "string") {
