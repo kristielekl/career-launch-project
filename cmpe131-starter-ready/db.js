@@ -46,6 +46,13 @@ function openDb(filename = path.join(__dirname, "database.sqlite")) {
         PRIMARY KEY (user_id, question_id)
       )
     `);
+    db.run(`
+      CREATE TABLE IF NOT EXISTS CareerGoals (
+        goal_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        text TEXT NOT NULL CHECK (length(trim(text)) BETWEEN 1 AND 200)
+      )
+    `);
     const questions = [
       [1, "Two Sum", "Arrays & Hashing", "Easy", "two-sum"],
       [2, "Valid Palindrome", "Two Pointers", "Easy", "valid-palindrome"],

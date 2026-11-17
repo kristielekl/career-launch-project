@@ -29,6 +29,9 @@ input:not([type="checkbox"]), textarea, select {
     border-radius: 6px; background: white; color: inherit;
 }
 textarea { min-height: 100px; resize: vertical; }
+#goalForm { display: grid; gap: 10px; }
+#goalForm button { justify-self: start; }
+#careerGoals { padding-left: 24px; overflow-wrap: anywhere; }
 input[type="checkbox"] { accent-color: var(--teal-ink); width: 18px; height: 18px; vertical-align: middle; }
 button, .dashboard-button, .button-link {
     display: inline-block; padding: 9px 16px; border: 1px solid transparent;
