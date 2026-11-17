@@ -58,6 +58,20 @@
     <p id="taskSummary" class="dashboard-note"></p>
 
     <div class="dashboard-grid">
+      <section class="dashboard-card" aria-labelledby="goalsHeading">
+        <h2 id="goalsHeading">Career Goals</h2>
+        <p class="dashboard-hint">What do you want to achieve?</p>
+        <form id="goalForm">
+          <label for="goalText">New career goal (up to 200 characters)</label>
+          <input id="goalText" name="text" type="text" maxlength="200" required
+                 placeholder="Get an internship" aria-describedby="goalMessage">
+          <button type="submit" class="dashboard-button primary" id="goalSubmit">Add goal</button>
+        </form>
+        <p id="goalMessage" role="status" aria-live="polite"></p>
+        <p id="goalsEmpty" class="dashboard-empty">Loading career goals…</p>
+        <ul id="careerGoals"></ul>
+      </section>
+
       <!-- Next unfinished tasks -->
       <section class="dashboard-card">
         <h2>Upcoming Timeline Tasks</h2>
@@ -80,7 +94,7 @@
       </section>
     </div>
 
-    <p class="dashboard-footnote">Simulated active student. Career goal/profile setup is a future feature.</p>
+    <p class="dashboard-footnote">Simulated active student. All visitors share this demo student's goals and progress.</p>
   </main>
   <script src="js/dashboard.js"></script>
 </body>

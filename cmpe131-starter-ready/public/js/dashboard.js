@@ -74,4 +74,61 @@ async function loadDashboard() {
   }
 }
 
+function appendGoal(goal) {
+  const item = document.createElement("li");
+  item.textContent = goal.text;
+  document.getElementById("careerGoals").append(item);
+  document.getElementById("goalsEmpty").textContent = "";
+}
+
+async function loadGoals() {
+  const button = document.getElementById("goalSubmit");
+  button.disabled = true;
+  try {
+    const response = await fetch("/api/goals");
+    if (!response.ok) throw new Error("Unable to load career goals. Refresh to try again.");
+    const goals = await response.json();
+    document.getElementById("careerGoals").replaceChildren();
+    document.getElementById("goalsEmpty").textContent = goals.length ? "" : "No career goals yet. Add your first goal above.";
+    goals.forEach(appendGoal);
+  } catch (error) {
+    document.getElementById("goalsEmpty").textContent = "";
+    document.getElementById("goalMessage").textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+
+document.getElementById("goalForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  const input = document.getElementById("goalText");
+  const message = document.getElementById("goalMessage");
+  const text = input.value.trim();
+  if (!text || text.length > 200) {
+    message.textContent = "Enter a career goal between 1 and 200 characters.";
+    input.focus();
+    return;
+  }
+  const button = document.getElementById("goalSubmit");
+  if (button.disabled) return;
+  button.disabled = true;
+  message.textContent = "Saving career goal…";
+  try {
+    const response = await fetch("/api/goals", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text })
+    });
+    if (!response.ok) throw new Error("Unable to save career goal. Please try again.");
+    appendGoal(await response.json());
+    input.value = "";
+    message.textContent = "Career goal saved.";
+    input.focus();
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
+
 loadDashboard();
+loadGoals();
