@@ -47,6 +47,7 @@ button.action-complete, .dashboard-button.primary, #taskCreationSubmitButton, #f
 button.action-delete, #deleteBtn { background: #fdf0ec; color: var(--navy); border-color: var(--coral); }
 #taskCreationCloseButton, .dashboard-button:not(.primary) { background: var(--off-white); color: var(--slate); border-color: var(--slate); }
 [role="alert"]:not(:empty):not([hidden]) { padding: 12px 16px; color: var(--navy); background: #fdf0ec; border: 1px solid var(--coral); border-radius: 6px; }
+#personalInformationCloseButton, .dashboard-button:not(.primary) { background: var(--off-white); color: var(--slate); border-color: var(--slate); }
 
 /* A wrapping, always-visible menu also works without JavaScript. */
 nav { border-bottom: 1px solid var(--border); margin-bottom: 28px; padding: 20px 0; }
@@ -73,12 +74,13 @@ nav { border-bottom: 1px solid var(--border); margin-bottom: 28px; padding: 20px
 
 /* Task forms and due-date timeline. */
 #timelineHeader { margin-bottom: 8px; }
-#taskCreationOpenButton { margin: 12px 0 20px; }
-#taskCreationForm { display: none; max-width: 600px; margin: 0 0 24px; padding: 24px; border: 1px solid var(--border); border-radius: 10px; background: white; }
-#taskCreationForm h3 { margin: 0 0 12px; }
-#taskCreationForm label, #form label { display: block; font-weight: 600; margin: 12px 0 6px; }
+#taskCreationOpenButton, #personalInformationOpenButton { margin: 12px 0 20px; }
+#taskCreationForm, #personalInformationForm { display: none; max-width: 600px; margin: 0 0 24px; padding: 24px; border: 1px solid var(--border); border-radius: 10px; background: white; }
+#taskCreationForm h3, #personalInformationForm h3 { margin: 0 0 12px; }
+#taskCreationForm label, #form label, #personalInformationForm label { display: block; font-weight: 600; margin: 12px 0 6px; }
 #taskCreationForm input, #taskCreationForm textarea, #form input { display: block; width: 100%; }
-#taskCreationForm button { margin: 8px 8px 0 0; }
+#personalInformationForm input, textarea { display: block; width: 40%; }
+#taskCreationForm button, #personalInformationForm button { margin: 8px 8px 0 0; }
 #taskList { margin: 24px 0; padding: 0; list-style: none; }
 #taskList > li { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: white; overflow-wrap: anywhere; }
 .task-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }

@@ -25,6 +25,8 @@
 
   <!--Create Task Button Shows the Task Creation Menu-->
   <button id="taskCreationOpenButton">Create a Task</button>
+  <!--Enter Personalized Information Button shows the Personalized Information Menu-->
+  <button id="personalInformationOpenButton">Enter Personalized Information</button>
   
   <div class="taskcreation-container">
     <form id="taskCreationForm" aria-labelledby="taskFormHeading" action="/api/tasks" method="post">
@@ -47,6 +49,23 @@
 
       <button id="taskCreationCloseButton" type="button">Cancel</button>
       <button id="taskCreationSubmitButton" type="submit">Submit</button>
+    </form>
+  </div>
+
+  <div class="personalizedInformationContainer">
+    <form id="personalInformationForm" aria-labelledby="taskFormheading">
+      <h3>Enter Personalized Information</h3>
+      <label for="graduationDate">Enter Graduation Date:</label>
+      <input type="text" id="graduationDate" name="graduationDate" placeholder="2026" required>
+
+      <label for="targetJob">Enter Target Job:</label>
+      <input type="text" id="targetJob" name="targetJob" placeholder="Ex: Software Developer">
+
+      <label for="availableStudyTime">Enter Available Study Time:  </label>
+      <input type="number" id="availableStudyTime" name="availableStudyTime" placeholder="5" min="0" max="1000" step="any">
+
+      <button id="personalInformationCloseButton" type="button">Cancel</button>
+      <button id="personalInformationSubmitButton" type="submit">Submit</button>
     </form>
   </div>
 

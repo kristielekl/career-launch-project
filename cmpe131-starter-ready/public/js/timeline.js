@@ -1,4 +1,5 @@
 const form = document.getElementById("taskCreationForm");
+const personForm = document.getElementById("personalInformationForm");
 const errorMessage = document.getElementById("taskError");
 const list = document.getElementById("taskList");
 const emptyMessage = document.getElementById("taskEmpty");
@@ -139,6 +140,16 @@ document.getElementById("taskCreationOpenButton").onclick = () => {
   document.getElementById("taskTitle").focus();
 };
 document.getElementById("taskCreationCloseButton").onclick = closeForm;
+
+// Open and Close the Personal Information Form
+document.getElementById("personalInformationOpenButton").onclick = () => {
+  personForm.style.display = "block";
+  document.getElementById("graduationDate").focus();
+}
+document.getElementById("personalInformationCloseButton").onclick = () => {
+  personForm.reset();
+  personForm.style.display = "none";
+}
 
 form.onsubmit = async event => {
   event.preventDefault();
