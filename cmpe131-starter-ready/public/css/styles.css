@@ -147,3 +147,20 @@ nav { border-bottom: 1px solid var(--border); margin-bottom: 28px; padding: 20px
     #taskCreationForm, #form, #questions section, .dashboard-card { padding: 20px; }
     #questions label { display: block; margin: 8px 0 0; }
 }
+
+/* Native popovers provide keyboard dismissal and outside-click handling. */
+.timeline-heading { display: flex; align-items: center; gap: 8px; margin: 3px 0 6px; }
+.timeline-heading .timeline-title { margin: 0; }
+.task-info { flex-shrink: 0; width: 32px; height: 32px; padding: 0; border-radius: 50%; }
+.task-details {
+    inset: 0 24px 0 auto; margin: auto 0; width: 360px;
+    max-width: calc(100vw - 32px); max-height: calc(100dvh - 32px);
+    overflow: auto; overflow-wrap: anywhere; white-space: pre-wrap;
+    padding: 20px; border: 1px solid var(--border); border-radius: 10px;
+    color: var(--navy); background: white; box-shadow: 0 8px 32px #16324f33;
+}
+.task-details h3 { margin: 0 0 12px; }
+.overdue-date, .overdue-label { color: #a32d20; background: #fff0ec; font-weight: 600; }
+@media (max-width: 600px) {
+    .task-details { inset: 0; margin: auto; }
+}
