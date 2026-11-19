@@ -80,7 +80,7 @@ nav { border-bottom: 1px solid var(--border); margin-bottom: 28px; padding: 20px
 #taskCreationForm input, #taskCreationForm textarea, #form input { display: block; width: 100%; }
 #taskCreationForm button { margin: 8px 8px 0 0; }
 #taskList { margin: 24px 0; padding: 0; list-style: none; }
-#taskList > li { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: white; overflow-wrap: anywhere; }
+#taskList > li { margin-bottom: 16px; padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: white; overflow-wrap: anywhere; white-space: pre-line; }
 .task-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .task-timeline { list-style: none; padding: 0 0 0 28px; margin: 24px 0 36px 8px; border-left: 2px solid var(--border); }
 .timeline-event { position: relative; margin-bottom: 24px; padding: 0 0 4px; overflow-wrap: anywhere; }

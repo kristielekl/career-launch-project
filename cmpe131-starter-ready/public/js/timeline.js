@@ -24,9 +24,9 @@ async function loadTasks() {
   emptyMessage.textContent = tasks.length ? "" : "No tasks yet. Create a task to get started.";
   for (const task of tasks) {
     const item = document.createElement("li");
-    item.textContent = `${task.title} — ${task.category} — Due: ${task.dueDate} — ${task.status}`
-      + (task.estimatedHours == null ? "" : ` — ${task.estimatedHours} hours`)
-      + (task.description ? ` — ${task.description}` : "");
+    item.textContent = `Task: ${task.title} \nCategory: ${task.category} \nDue Date: ${task.dueDate} \nStatus: ${task.status} \n `
+      + (task.estimatedHours == null ? "" : `Duration: ${task.estimatedHours} hours`)
+      + (task.description ? `\nDescription: ${task.description}` : "");
     const actions = document.createElement("div");
     actions.className = "task-actions";
     item.append(actions);
