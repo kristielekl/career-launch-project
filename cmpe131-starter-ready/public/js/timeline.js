@@ -17,6 +17,21 @@ async function request(options, id = "") {
   return data;
 }
 
+function isOverdue(task) {
+  const now = new Date();
+  const today = `${now.getFullYear().toString().padStart(4, "0")}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  return task.status !== "Completed" && task.dueDate < today;
+}
+
+function markOverdue(date, task) {
+  if (!isOverdue(task)) return;
+  date.classList.add("overdue-date");
+  const warning = document.createElement("span");
+  warning.className = "overdue-label";
+  warning.textContent = " — Overdue";
+  date.after(warning);
+}
+
 async function loadTasks() {
   const tasks = await request();
   list.replaceChildren();
@@ -24,9 +39,15 @@ async function loadTasks() {
   emptyMessage.textContent = tasks.length ? "" : "No tasks yet. Create a task to get started.";
   for (const task of tasks) {
     const item = document.createElement("li");
-    item.textContent = `Task: ${task.title} \nCategory: ${task.category} \nDue Date: ${task.dueDate} \nStatus: ${task.status} \n `
+    item.append(`Task: ${task.title} \nCategory: ${task.category} \nDue Date: `);
+    const date = document.createElement("time");
+    date.dateTime = task.dueDate;
+    date.textContent = task.dueDate;
+    item.append(date);
+    markOverdue(date, task);
+    item.append(` \nStatus: ${task.status} \n `
       + (task.estimatedHours == null ? "" : `Duration: ${task.estimatedHours} hours`)
-      + (task.description ? `\nDescription: ${task.description}` : "");
+      + (task.description ? `\nDescription: ${task.description}` : ""));
     const actions = document.createElement("div");
     actions.className = "task-actions";
     item.append(actions);
@@ -93,7 +114,35 @@ function renderTimeline(tasks) {
     const badge = document.createElement("span");
     badge.className = `status-badge ${statusClass}`;
     badge.textContent = task.status;
-    item.append(date, title, badge);
+    const info = document.createElement("button");
+    info.type = "button";
+    info.className = "task-info";
+    info.textContent = "i";
+    info.setAttribute("aria-label", `Details for ${task.title}`);
+    const details = document.createElement("div");
+    details.id = `task-details-${task.id}`;
+    details.className = "task-details";
+    details.popover = "auto";
+    info.popoverTargetElement = details;
+    const heading = document.createElement("h3");
+    heading.id = `${details.id}-heading`;
+    heading.textContent = task.title;
+    details.setAttribute("aria-labelledby", heading.id);
+    details.append(heading);
+    for (const [label, value] of [
+      ["Description", task.description || "No description provided."],
+      ["Category", task.category],
+      ["Estimated hours", task.estimatedHours ?? "Not specified"]
+    ]) {
+      const field = document.createElement("p");
+      field.textContent = `${label}: ${value}`;
+      details.append(field);
+    }
+    const headingRow = document.createElement("div");
+    headingRow.className = "timeline-heading";
+    headingRow.append(title, info);
+    item.append(date, headingRow, badge, details);
+    markOverdue(date, task);
     timeline.append(item);
   }
 }

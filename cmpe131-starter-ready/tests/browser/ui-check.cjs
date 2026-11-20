@@ -100,6 +100,59 @@ const path = require("node:path");
     assert.equal(await calendarPage.locator('#taskTimeline time[datetime="0099-07-01"]').textContent(), "Jul 1, 99");
     await apia.close();
     console.log("PASS: calendar dates retain their day and early year in Pacific/Apia");
+    for (const [timezoneId, today] of [["America/Los_Angeles", "2026-07-09"], ["Pacific/Apia", "2026-07-10"]]) {
+      const context = await browser.newContext({ timezoneId });
+      const detailsPage = await context.newPage();
+      await detailsPage.clock.install({ time: new Date("2026-07-10T00:30:00Z") });
+      const fixtures = [
+        { id: 1, title: "Past task", dueDate: "2026-07-08", status: "Planned",
+          description: "<b>Practice</b> " + "details ".repeat(100), estimatedHours: 2.5 },
+        { id: 2, title: "Today task", dueDate: today, status: "In Progress", estimatedHours: 0 },
+        { id: 3, title: "Future task", dueDate: "2026-07-11", status: "Planned" },
+        { id: 4, title: "Finished task", dueDate: "2026-07-08", status: "Completed" }
+      ].map(task => ({ category: "Interview prep", ...task }));
+      await detailsPage.route("**/api/tasks", route => route.fulfill({ json: fixtures }));
+      await detailsPage.goto(base + "/timeline.html");
+      await detailsPage.locator("#taskTimeline li").nth(3).waitFor();
+      for (const selector of ["#taskTimeline", "#taskList"]) {
+        assert.equal(await detailsPage.locator(`${selector} .overdue-label`).count(), 1);
+        const overdue = detailsPage.locator(`${selector} .overdue-date`);
+        assert.equal(await overdue.getAttribute("datetime"), "2026-07-08");
+        assert.notEqual(await overdue.evaluate(node => getComputedStyle(node).color),
+          await detailsPage.locator(`${selector} time:not(.overdue-date)`).first().evaluate(node => getComputedStyle(node).color));
+      }
+      const info = detailsPage.getByRole("button", { name: "Details for Past task", exact: true });
+      const popover = detailsPage.locator("#task-details-1");
+      await info.focus();
+      await detailsPage.keyboard.press("Enter");
+      assert.equal(await popover.isVisible(), true);
+      assert.match(await popover.textContent(), /Description: <b>Practice<\/b>/);
+      assert.match(await popover.textContent(), /Category: Interview prep/);
+      assert.match(await popover.textContent(), /Estimated hours: 2.5/);
+      assert.equal(await popover.locator("b").count(), 0);
+      await detailsPage.keyboard.press("Escape");
+      assert.equal(await popover.isVisible(), false);
+      assert.equal(await info.evaluate(node => node === document.activeElement), true);
+      await info.click();
+      await info.click();
+      assert.equal(await popover.isVisible(), false);
+      await info.click();
+      await detailsPage.locator("#timelineHeader").click();
+      assert.equal(await popover.isVisible(), false);
+      await detailsPage.getByRole("button", { name: "Details for Today task", exact: true }).click();
+      assert.match(await detailsPage.locator(":popover-open").textContent(), /Estimated hours: 0/);
+      assert.match(await detailsPage.locator(":popover-open").textContent(), /No description provided/);
+      for (const width of [390, 1440]) {
+        await detailsPage.setViewportSize({ width, height: 700 });
+        await info.click();
+        const box = await popover.boundingBox();
+        assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= width && box.y + box.height <= 700);
+        if (width === 1440) assert.ok(box.x > width / 2);
+        await detailsPage.keyboard.press("Escape");
+      }
+      await context.close();
+    }
+    console.log("PASS: local-day overdue rules in both lists; safe task details, keyboard/toggle/outside dismissal, mobile fit");
     await page.goto(base + "/dashboard.html");
     await page.goto(base + "/timeline.html#create");
     assert.equal(await page.locator("#taskCreationForm").isVisible(), true);
