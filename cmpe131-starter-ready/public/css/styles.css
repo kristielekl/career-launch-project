@@ -207,7 +207,10 @@ body.app { display: grid; grid-template-columns: 240px minmax(0, 1fr); min-heigh
 #goalMessage { margin-top: 12px; }
 .goals { list-style: none; margin: 16px 0 0; padding: 0; }
 .goals li { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid var(--line); font-size: 15.5px; line-height: 1.4; overflow-wrap: anywhere; }
-.goals li .ico { color: var(--action); margin-top: 2px; }
+.goals li .ico { color: var(--action); margin-top: 12px; }
+.goals .goal-text { flex: 1; min-width: 0; padding-top: 10px; }
+.goals .goal-remove { flex: none; font-weight: 550; color: var(--muted); }
+.goals .goal-remove:hover { color: var(--danger); background: var(--danger-soft); }
 #goalsEmpty { margin-top: 16px; }
 @container goal (max-width: 400px) { .inline-form { flex-direction: column; } .inline-form .input { flex: none; width: 100%; } .inline-form .btn { align-self: flex-start; } }
 

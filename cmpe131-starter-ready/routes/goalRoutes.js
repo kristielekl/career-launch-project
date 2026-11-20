@@ -22,5 +22,15 @@ module.exports = function goalRoutes(db) {
       });
     }
   });
+  router.delete("/:id", async (req, res) => {
+    try {
+      await goals.remove(userId, req.params.id);
+      res.json({ ok: true });
+    } catch (error) {
+      const status = [400, 404].includes(error.status) ? error.status : 500;
+      res.status(status).json({ error: status === 500
+        ? "Unable to remove career goal. Please try again." : error.message });
+    }
+  });
   return router;
 };

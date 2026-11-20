@@ -77,7 +77,7 @@ async function main() {
     await input.fill("  Get an internship  ");
     await input.press("Enter");
     await status("Career goal saved.");
-    assert.deepEqual(await page.locator("#careerGoals li").allTextContents(), ["Get an internship"]);
+    assert.deepEqual(await page.locator("#careerGoals .goal-text").allTextContents(), ["Get an internship"]);
     assert.equal(await input.inputValue(), "");
     assert.equal(await input.getAttribute("maxlength"), "200");
     const literal = '<img src=x onerror="window.goalXss=true">';
@@ -88,12 +88,12 @@ async function main() {
     assert.equal(await page.evaluate(() => window.goalXss), undefined);
     await page.reload();
     await page.getByText("Get an internship", { exact: true }).waitFor();
-    assert.deepEqual(await page.locator("#careerGoals li").allTextContents(), ["Get an internship", literal]);
+    assert.deepEqual(await page.locator("#careerGoals .goal-text").allTextContents(), ["Get an internship", literal]);
     await stopServer();
     base = await startServer(dir);
     await page.goto(base + "/dashboard.html");
     await page.getByText("Get an internship", { exact: true }).waitFor();
-    assert.deepEqual(await page.locator("#careerGoals li").allTextContents(), ["Get an internship", literal]);
+    assert.deepEqual(await page.locator("#careerGoals .goal-text").allTextContents(), ["Get an internship", literal]);
     console.log("PASS: real server registration, empty state/user isolation, whitespace validation, keyboard entry, literal HTML, reload and server-restart persistence");
     await page.screenshot({ path: path.join(evidence, "saved-desktop.png"), fullPage: true });
     await page.route("**/api/goals", route => route.request().method() === "POST"
@@ -109,6 +109,32 @@ async function main() {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.screenshot({ path: path.join(evidence, "saved-mobile.png"), fullPage: true });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    assert.equal(await input.getAttribute("placeholder"), "Ex: Get an internship");
+    const remove = page.getByRole("button", { name: "Remove goal: Get an internship", exact: true });
+    page.once("dialog", dialog => dialog.dismiss());
+    await remove.click();
+    assert.equal(await page.locator("#careerGoals li").count(), 3);
+    await page.route("**/api/goals/*", route => route.fulfill({ status: 500, body: '{}' }));
+    page.once("dialog", dialog => dialog.accept());
+    await remove.click();
+    await status("Unable to remove career goal. Please try again.");
+    assert.equal(await remove.isEnabled(), true);
+    assert.equal(await page.locator("#careerGoals li").count(), 3);
+    await page.unroute("**/api/goals/*");
+    page.once("dialog", dialog => dialog.accept());
+    await remove.click();
+    await status("Career goal removed.");
+    await page.reload();
+    await page.locator(".goal-remove").first().waitFor();
+    assert.equal(await page.locator("#careerGoals li").count(), 2);
+    for (let i = 0; i < 2; i++) {
+      page.once("dialog", dialog => dialog.accept());
+      await page.locator(".goal-remove").first().click();
+      await status("Career goal removed.");
+    }
+    await page.getByText("No career goals yet. Add your first goal above.").waitFor();
+    assert.equal(await input.evaluate(el => el === document.activeElement), true);
+    console.log("PASS: remove cancel, failure/retry, persistence, final empty state and focus");
     await page.route("**/api/goals", route => route.fulfill({ status: 500, contentType: "application/json", body: '{}' }));
     await page.reload();
     await status("Unable to load career goals. Refresh to try again.");

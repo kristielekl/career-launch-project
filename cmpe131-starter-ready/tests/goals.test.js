@@ -25,6 +25,10 @@ test("career goals persist after reopening SQLite and stay scoped to their stude
   assert.deepEqual(await goals.list(1), [first, second]);
   assert.deepEqual(first.text, "Get an internship");
   assert.deepEqual(await goals.list(2), [privateGoal]);
+  await goals.remove(1, first.id);
+  await close(db);
+  db = openDb(path.join(dir, "goals.sqlite"));
+  assert.deepEqual(await createGoalService(db).list(1), [second]);
 });
 
 test("career goal API validates text, ignores supplied identity, and handles database failures", async t => {
@@ -64,4 +68,30 @@ test("career goal API validates text, ignores supplied identity, and handles dat
   const saveFailure = await post({ text: "Get an internship" });
   assert.equal(saveFailure.status, 500);
   assert.deepEqual(await saveFailure.json(), { error: "Unable to save career goal. Please try again." });
+});
+
+
+test("goal deletion validates IDs, enforces ownership and handles missing rows and database failure", async t => {
+  const db = openDb(":memory:");
+  const goals = createGoalService(db);
+  const own = await goals.add(1, { text: "Internship" });
+  const other = await goals.add(2, { text: "Private" });
+  const app = express();
+  app.use("/api/goals", goalRoutes(db));
+  const server = app.listen(0, "127.0.0.1");
+  await new Promise(resolve => server.once("listening", resolve));
+  t.after(async () => { await new Promise(resolve => server.close(resolve)); await close(db); });
+  const remove = id => fetch(`http://127.0.0.1:${server.address().port}/api/goals/${id}?userId=2`, { method: "DELETE" });
+  for (const id of ["0", "-1", "1.5", "abc", "9007199254740992"]) assert.equal((await remove(id)).status, 400);
+  assert.equal((await remove(other.id)).status, 404);
+  assert.deepEqual(await goals.list(2), [other]);
+  const response = await remove(own.id);
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), { ok: true });
+  assert.deepEqual(await goals.list(1), []);
+  assert.equal((await remove(own.id)).status, 404);
+  await promisify(db.run.bind(db))("DROP TABLE CareerGoals");
+  const failure = await remove(own.id);
+  assert.equal(failure.status, 500);
+  assert.deepEqual(await failure.json(), { error: "Unable to remove career goal. Please try again." });
 });
