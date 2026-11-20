@@ -261,6 +261,18 @@ function setFormError(message) {
   hoursHelp.className = hoursError ? "field-error" : "field-help";
 }
 
+// Show range feedback when the user leaves the hours field.
+function showHoursValidation() {
+  const invalid = !hoursInput.validity.valid;
+  hoursInput.setAttribute("aria-invalid", String(invalid));
+  hoursHelp.textContent = invalid ? hoursInput.validationMessage : "Up to 999";
+  hoursHelp.className = invalid ? "field-error" : "field-help";
+}
+hoursInput.addEventListener("blur", showHoursValidation);
+hoursInput.addEventListener("input", () => {
+  if (hoursInput.getAttribute("aria-invalid") === "true") showHoursValidation();
+});
+
 function openForm(task, button) {
   closeForm(false);
   opener = button;
@@ -342,14 +354,3 @@ loadTasks().catch(() => {
 });
 
 if (location.hash === "#create") createButton.click();
-// Show range feedback when the user leaves the hours field.
-function showHoursValidation() {
-  const invalid = !hoursInput.validity.valid;
-  hoursInput.setAttribute("aria-invalid", String(invalid));
-  hoursHelp.textContent = invalid ? hoursInput.validationMessage : "Up to 999";
-  hoursHelp.className = invalid ? "field-error" : "field-help";
-}
-hoursInput.addEventListener("blur", showHoursValidation);
-hoursInput.addEventListener("input", () => {
-  if (hoursInput.getAttribute("aria-invalid") === "true") showHoursValidation();
-});
