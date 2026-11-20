@@ -89,11 +89,46 @@ async function loadDashboard() {
   }
 }
 
+// Serialize goal writes so success messages cannot hide another write's failure.
+function setGoalsBusy(busy) {
+  document.querySelectorAll("#goalSubmit, .goal-remove").forEach(button => { button.disabled = busy; });
+}
+
 function appendGoal(goal) {
   const item = document.createElement("li");
   const text = document.createElement("span");
+  text.className = "goal-text";
   text.textContent = goal.text;
-  item.append(icon("target"), text);
+  const remove = document.createElement("button");
+  remove.type = "button";
+  remove.className = "btn btn-sm btn-quiet goal-remove";
+  remove.textContent = "Remove";
+  remove.setAttribute("aria-label", `Remove goal: ${goal.text}`);
+  remove.onclick = async () => {
+    if (!confirm(`Remove "${goal.text}"?`)) return;
+    setGoalsBusy(true);
+    showGoalMessage("Removing career goal…", "info");
+    try {
+      const response = await fetch(`/api/goals/${goal.id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Unable to remove career goal. Please try again.");
+      const next = item.nextElementSibling?.querySelector("button")
+        || item.previousElementSibling?.querySelector("button") || document.getElementById("goalText");
+      const restoreFocus = document.activeElement === remove || document.activeElement === document.body;
+      item.remove();
+      if (!document.getElementById("careerGoals").children.length) {
+        document.getElementById("goalsEmpty").textContent = "No career goals yet. Add your first goal above.";
+      }
+      setGoalsBusy(false);
+      if (restoreFocus) next.focus();
+      showGoalMessage("Career goal removed.", "ok");
+    } catch (error) {
+      showGoalMessage(error.message, "err");
+    } finally {
+      setGoalsBusy(false);
+      if (remove.isConnected && document.activeElement === document.body) remove.focus();
+    }
+  };
+  item.append(icon("target"), text, remove);
   document.getElementById("careerGoals").append(item);
   document.getElementById("goalsEmpty").textContent = "";
 }
@@ -135,7 +170,7 @@ document.getElementById("goalForm").addEventListener("submit", async event => {
   }
   const button = document.getElementById("goalSubmit");
   if (button.disabled) return;
-  button.disabled = true;
+  setGoalsBusy(true);
   showGoalMessage("Saving career goal…", "info");
   try {
     const response = await fetch("/api/goals", {
@@ -150,7 +185,7 @@ document.getElementById("goalForm").addEventListener("submit", async event => {
   } catch (error) {
     showGoalMessage(error.message, "err");
   } finally {
-    button.disabled = false;
+    setGoalsBusy(false);
   }
 });
 
