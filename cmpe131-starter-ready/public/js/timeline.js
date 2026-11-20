@@ -39,15 +39,15 @@ async function loadTasks() {
   emptyMessage.textContent = tasks.length ? "" : "No tasks yet. Create a task to get started.";
   for (const task of tasks) {
     const item = document.createElement("li");
-    item.append(`${task.title} — ${task.category} — Due: `);
+    item.append(`Task: ${task.title} \nCategory: ${task.category} \nDue Date: `);
     const date = document.createElement("time");
     date.dateTime = task.dueDate;
     date.textContent = task.dueDate;
     item.append(date);
     markOverdue(date, task);
-    item.append(` — ${task.status}`
-      + (task.estimatedHours == null ? "" : ` — ${task.estimatedHours} hours`)
-      + (task.description ? ` — ${task.description}` : ""));
+    item.append(` \nStatus: ${task.status} \n `
+      + (task.estimatedHours == null ? "" : `Duration: ${task.estimatedHours} hours`)
+      + (task.description ? `\nDescription: ${task.description}` : ""));
     const actions = document.createElement("div");
     actions.className = "task-actions";
     item.append(actions);
