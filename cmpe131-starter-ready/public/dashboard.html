@@ -1,100 +1,85 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard Page</title>
-  <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard - CareerLaunch</title>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <nav>
-    <div class="navigation-headings">
-      <h1><a href="index.html" class="navigation" id="titletext">CareerLaunch</a></h1>
-      <h2><a href="dashboard.html" class="navigation" id="dashboardtext" aria-current="page">Dashboard</a></h2>
-      <h2><a href="timeline.html" class="navigation" id="navigationtext">Timeline</a></h2>
-      <h2><a href="questions.html" class="navigation">Question Map</a></h2>
-      <h2><a href="careerResources.html" class="navigation">Career Resources</a></h2>
-      <h2><a href="login.html" class="navigation" id="logintext">Login</a></h2>
+<body class="app">
+  <nav class="side" aria-label="Main navigation">
+    <a class="brand" href="index.html"><span class="mark"><span class="ico i-launch" aria-hidden="true"></span></span>CareerLaunch</a>
+    <div class="tabs">
+      <a class="nav-item" href="dashboard.html" aria-current="page"><span class="ico i-grid" aria-hidden="true"></span><span>Dashboard</span></a>
+      <a class="nav-item" href="timeline.html"><span class="ico i-timeline" aria-hidden="true"></span><span>Timeline</span></a>
+      <a class="nav-item" href="questions.html"><span class="ico i-code" aria-hidden="true"></span><span>Question Map</span></a>
+      <a class="nav-item" href="careerResources.html"><span class="ico i-book" aria-hidden="true"></span><span><span class="long">Career </span>Resources</span></a>
     </div>
+    <a class="nav-item login-link" href="login.html"><span class="ico i-login" aria-hidden="true"></span>Login</a>
+    <label class="theme-choice"><span>Theme</span><select id="themeChoice" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
   </nav>
-
-  <hr id="headerline">
-  
-  <main class="dashboard">
-    <!-- Page header with quick actions -->
-    <header class="dashboard-header">
-      <div>
-        <h1>Dashboard</h1>
-        <p class="dashboard-subtitle">Your career preparation at a glance.</p>
+  <main class="content">
+    <div class="page-head">
+      <div><h1>Dashboard</h1><p class="demo-note"><span class="ico i-user ico-sm" aria-hidden="true"></span><span>Simulated active student. All visitors share this demo student's goals and progress.</span></p></div>
+      <div class="actions">
+        <a href="timeline.html" class="btn btn-secondary">Manage timeline</a>
+        <a href="timeline.html#create" class="btn btn-primary"><span class="ico i-plus ico-sm" aria-hidden="true"></span>Create task</a>
       </div>
-      <div class="dashboard-actions">
-        <a href="timeline.html#create" class="dashboard-button primary">Create Task</a>
-        <a href="timeline.html" class="dashboard-button">View / Manage Timeline</a>
-      </div>
-    </header>
-
-    <p id="dashboardError" class="dashboard-error" role="alert"></p>
-    <p id="dashboardLoading" class="dashboard-loading">Loading dashboard…</p>
-
-    <!-- Task counts -->
-    <section class="dashboard-stats" aria-label="Task summary">
-      <div class="stat-card">
-        <span class="stat-label">Total Tasks</span>
-        <span class="stat-value" id="statTotal">–</span>
-      </div>
-      <div class="stat-card planned">
-        <span class="stat-label">Planned</span>
-        <span class="stat-value" id="statPlanned">–</span>
-      </div>
-      <div class="stat-card in-progress">
-        <span class="stat-label">In Progress</span>
-        <span class="stat-value" id="statInProgress">–</span>
-      </div>
-      <div class="stat-card completed">
-        <span class="stat-label">Completed</span>
-        <span class="stat-value" id="statCompleted">–</span>
-      </div>
-    </section>
-    <p id="taskSummary" class="dashboard-note"></p>
-
-    <div class="dashboard-grid">
-      <section class="dashboard-card" aria-labelledby="goalsHeading">
-        <h2 id="goalsHeading">Career Goals</h2>
-        <p class="dashboard-hint">What do you want to achieve?</p>
-        <form id="goalForm">
-          <label for="goalText">New career goal (up to 200 characters)</label>
-          <input id="goalText" name="text" type="text" maxlength="200" required
-                 placeholder="Get an internship" aria-describedby="goalMessage">
-          <button type="submit" class="dashboard-button primary" id="goalSubmit">Add goal</button>
-        </form>
-        <p id="goalMessage" role="status" aria-live="polite"></p>
-        <p id="goalsEmpty" class="dashboard-empty">Loading career goals…</p>
-        <ul id="careerGoals"></ul>
-      </section>
-
-      <!-- Next unfinished tasks -->
-      <section class="dashboard-card">
-        <h2>Upcoming Timeline Tasks</h2>
-        <p id="upcomingEmpty" class="dashboard-empty"></p>
-        <ul id="upcomingTasks" class="upcoming-list"></ul>
-        <a href="timeline.html" class="card-link">See all tasks →</a>
-      </section>
-
-      <!-- Coding progress from the Question Map -->
-      <section class="dashboard-card">
-        <h2>Coding Progress</h2>
-        <p class="coding-percent" id="codingPercent">0%</p>
-        <div class="progress-track" role="progressbar" aria-label="Coding questions completed"
-             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="codingBar">
-          <div class="progress-fill" id="codingFill"></div>
-        </div>
-        <p id="codingSummary"></p>
-        <p class="dashboard-hint">Progress is self-reported from the Question Map.</p>
-        <a href="questions.html" class="card-link">Browse Question Map</a>
-      </section>
     </div>
 
-    <p class="dashboard-footnote">Simulated active student. All visitors share this demo student's goals and progress.</p>
+    <p id="dashboardError" role="alert"></p>
+    <p id="dashboardLoading" class="hint">Loading dashboard…</p>
+
+    <div class="dash">
+      <div class="dcol dcol-l">
+        <section class="card c-sum" aria-labelledby="tasksHeading">
+          <div class="card-head"><h2 id="tasksHeading"><span class="hi"><span class="ico i-timeline" aria-hidden="true"></span></span>Timeline tasks</h2></div>
+          <div class="stats">
+            <div class="stat"><span class="k">Total tasks</span><span class="v" id="statTotal">–</span></div>
+            <div class="stat"><span class="k"><span class="dot"></span>Planned</span><span class="v" id="statPlanned">–</span></div>
+            <div class="stat"><span class="k"><span class="dot dot-progress"></span>In progress</span><span class="v" id="statInProgress">–</span></div>
+            <div class="stat"><span class="k"><span class="dot dot-done"></span>Completed</span><span class="v" id="statCompleted">–</span></div>
+          </div>
+          <p id="taskSummary" class="summary"></p>
+        </section>
+
+        <section class="card c-up" aria-labelledby="upcomingHeading">
+          <div class="card-head"><h2 id="upcomingHeading"><span class="hi"><span class="ico i-timeline" aria-hidden="true"></span></span>Upcoming timeline tasks</h2><span class="meta">Next unfinished</span></div>
+          <p id="upcomingEmpty" class="empty"></p>
+          <ul id="upcomingTasks" class="rows"></ul>
+          <div class="card-foot"><a href="timeline.html" class="link">See all tasks <span class="ico i-arrow ico-sm" aria-hidden="true"></span></a></div>
+        </section>
+      </div>
+      <div class="dcol dcol-r">
+        <section class="card c-code" aria-labelledby="codingHeading">
+          <div class="card-head"><h2 id="codingHeading"><span class="hi"><span class="ico i-code" aria-hidden="true"></span></span>Coding progress</h2><a href="questions.html" class="link" aria-label="Browse Question Map">Question Map <span class="ico i-arrow ico-sm" aria-hidden="true"></span></a></div>
+          <div class="code-body">
+            <div class="coding-row"><span id="codingSummary"></span><span class="pct" id="codingPercent">0%</span></div>
+            <div class="progress" role="progressbar" aria-label="Coding questions completed"
+                 aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="codingBar"><span id="codingFill"></span></div>
+            <p class="hint"><span class="ico i-info ico-xs" aria-hidden="true"></span><span>Progress is self-reported from the Question Map.</span></p>
+          </div>
+        </section>
+
+        <section class="card c-goal" aria-labelledby="goalsHeading">
+          <div class="card-head"><h2 id="goalsHeading"><span class="hi"><span class="ico i-target" aria-hidden="true"></span></span>Career goals</h2></div>
+          <p class="goal-q">What do you want to achieve?</p>
+          <p class="examples"><b>Examples:</b> get an internship, practice coding weekly, finish my resume.</p>
+          <form id="goalForm">
+            <label class="lbl" for="goalText">New career goal <span class="req">(up to 200 characters)</span></label>
+            <div class="inline-form">
+              <input id="goalText" class="input" name="text" type="text" maxlength="200" required
+                     placeholder="Get an internship" aria-describedby="goalMessage">
+              <button type="submit" class="btn btn-primary" id="goalSubmit">Add goal</button>
+            </div>
+          </form>
+          <p id="goalMessage" class="msg" role="status" aria-live="polite"></p>
+          <p id="goalsEmpty" class="empty">Loading career goals…</p>
+          <ul id="careerGoals" class="goals"></ul>
+        </section>
+      </div>
+    </div>
   </main>
   <script src="js/dashboard.js"></script>
 </body>

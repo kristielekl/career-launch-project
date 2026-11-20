@@ -3,12 +3,29 @@ function statusClass(status) {
   return status.toLowerCase().replace(/\s+/g, "-");
 }
 
-// Shows a YYYY-MM-DD due date as e.g. "Nov 1, 2026" (parsed as a local date, so it doesn't shift a day).
+// Shows a YYYY-MM-DD due date as e.g. "Sun, Nov 1, 2026" (parsed as a local date, so it doesn't shift a day).
 function formatDate(value) {
   const date = new Date(`${value}T00:00:00`);
   return Number.isNaN(date.getTime())
     ? value
-    : date.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+    : date.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
+// Decorative icon; see the .i-* mask rules in styles.css.
+function icon(name, size = "ico-sm") {
+  const span = document.createElement("span");
+  span.className = `ico i-${name} ${size}`;
+  span.setAttribute("aria-hidden", "true");
+  return span;
+}
+
+function statusBadge(status) {
+  const badge = document.createElement("span");
+  badge.className = `status-badge ${statusClass(status)}`;
+  if (status === "Completed") badge.append(icon("check", "ico-xs"));
+  else { const dot = document.createElement("span"); dot.className = "dot"; badge.append(dot); }
+  badge.append(status);
+  return badge;
 }
 
 function renderTasks(tasks) {
@@ -16,9 +33,12 @@ function renderTasks(tasks) {
   document.getElementById("statPlanned").textContent = tasks.planned;
   document.getElementById("statInProgress").textContent = tasks.inProgress;
   document.getElementById("statCompleted").textContent = tasks.completed;
-  document.getElementById("taskSummary").textContent = tasks.total
+  const summary = document.getElementById("taskSummary");
+  summary.textContent = tasks.total
     ? `${tasks.total} tasks: ${tasks.planned} Planned, ${tasks.inProgress} In Progress, ${tasks.completed} Completed.`
     : "No tasks yet. Create a task to get started.";
+  // The count sentence repeats the visible counts, so only screen readers get it; the empty sentence stays visible.
+  summary.className = tasks.total ? "sr" : "summary";
 }
 
 function renderUpcoming(upcoming) {
@@ -29,22 +49,17 @@ function renderUpcoming(upcoming) {
   for (const task of upcoming) {
     // textContent (not innerHTML) so task text containing HTML is shown literally.
     const item = document.createElement("li");
-    item.className = "upcoming-item";
 
     const info = document.createElement("div");
     const title = document.createElement("span");
-    title.className = "upcoming-title";
+    title.className = "row-title";
     title.textContent = task.title;
     const due = document.createElement("span");
-    due.className = "upcoming-due";
-    due.textContent = `Due: ${formatDate(task.dueDate)}`;
+    due.className = "row-meta";
+    due.textContent = `Due ${formatDate(task.dueDate)}`;
     info.append(title, due);
 
-    const badge = document.createElement("span");
-    badge.className = `status-badge ${statusClass(task.status)}`;
-    badge.textContent = task.status;
-
-    item.append(info, badge);
+    item.append(info, statusBadge(task.status));
     list.append(item);
   }
 }
@@ -55,7 +70,7 @@ function renderCoding(coding) {
   document.getElementById("codingFill").style.width = `${percent}%`;
   document.getElementById("codingBar").setAttribute("aria-valuenow", String(percent));
   document.getElementById("codingSummary").textContent = coding.completed
-    ? `${coding.completed} of ${coding.total} questions completed (${percent}%).`
+    ? `${coding.completed} of ${coding.total} questions completed`
     : "No coding progress recorded yet.";
 }
 
@@ -70,15 +85,25 @@ async function loadDashboard() {
   } catch (error) {
     document.getElementById("dashboardError").textContent = error.message;
   } finally {
-    document.getElementById("dashboardLoading").textContent = "";
+    document.getElementById("dashboardLoading").hidden = true;
   }
 }
 
 function appendGoal(goal) {
   const item = document.createElement("li");
-  item.textContent = goal.text;
+  const text = document.createElement("span");
+  text.textContent = goal.text;
+  item.append(icon("target"), text);
   document.getElementById("careerGoals").append(item);
   document.getElementById("goalsEmpty").textContent = "";
+}
+
+// Shows a goal status message; kind picks the colour (ok, err or info).
+function showGoalMessage(text, kind) {
+  const message = document.getElementById("goalMessage");
+  message.textContent = text;
+  message.className = `msg msg-${kind}`;
+  document.getElementById("goalText").setAttribute("aria-invalid", String(kind === "err" && text.startsWith("Enter")));
 }
 
 async function loadGoals() {
@@ -93,7 +118,7 @@ async function loadGoals() {
     goals.forEach(appendGoal);
   } catch (error) {
     document.getElementById("goalsEmpty").textContent = "";
-    document.getElementById("goalMessage").textContent = error.message;
+    showGoalMessage(error.message, "err");
   } finally {
     button.disabled = false;
   }
@@ -102,17 +127,16 @@ async function loadGoals() {
 document.getElementById("goalForm").addEventListener("submit", async event => {
   event.preventDefault();
   const input = document.getElementById("goalText");
-  const message = document.getElementById("goalMessage");
   const text = input.value.trim();
   if (!text || text.length > 200) {
-    message.textContent = "Enter a career goal between 1 and 200 characters.";
+    showGoalMessage("Enter a career goal between 1 and 200 characters.", "err");
     input.focus();
     return;
   }
   const button = document.getElementById("goalSubmit");
   if (button.disabled) return;
   button.disabled = true;
-  message.textContent = "Saving career goal…";
+  showGoalMessage("Saving career goal…", "info");
   try {
     const response = await fetch("/api/goals", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -121,10 +145,10 @@ document.getElementById("goalForm").addEventListener("submit", async event => {
     if (!response.ok) throw new Error("Unable to save career goal. Please try again.");
     appendGoal(await response.json());
     input.value = "";
-    message.textContent = "Career goal saved.";
+    showGoalMessage("Career goal saved.", "ok");
     input.focus();
   } catch (error) {
-    message.textContent = error.message;
+    showGoalMessage(error.message, "err");
   } finally {
     button.disabled = false;
   }
