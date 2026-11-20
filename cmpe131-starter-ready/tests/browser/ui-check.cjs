@@ -49,7 +49,7 @@ const path = require("node:path");
     await page.locator("#category").fill("Interview prep");
     await page.locator("#dueDate").fill("2026-07-20");
     await page.locator("#taskCreationSubmitButton").click();
-    const task = page.locator("#taskList > li").first();
+    const task = page.locator("#taskTimeline li").first();
     await task.waitFor();
     assert.equal(await page.locator("#taskTimeline .timeline-title").textContent(), "Practice interview");
     async function action(name, status) {
@@ -81,13 +81,17 @@ const path = require("node:path");
     assert.match(await page.locator("#taskTimeline time").first().textContent(), /99/);
     assert.doesNotMatch(await page.locator("#taskTimeline time").first().textContent(), /1999/);
     assert.equal(await page.locator("#taskTimeline b").count(), 0);
-    page.once("dialog", dialog => dialog.dismiss());
+    const confirmDialog = page.getByRole("alertdialog", { name: 'Delete "<b>Earlier task</b>"?' });
     await task.getByRole("button", { name: "Delete", exact: true }).click();
-    assert.equal(await page.locator("#taskList > li").count(), 2);
-    page.once("dialog", dialog => dialog.accept());
+    assert.equal(await confirmDialog.isVisible(), true);
+    await page.keyboard.press("Escape");
+    assert.equal(await confirmDialog.isVisible(), false);
+    assert.equal(await task.getByRole("button", { name: "Delete", exact: true }).evaluate(node => node === document.activeElement), true);
+    assert.equal(await page.locator("#taskTimeline li").count(), 2);
     await task.getByRole("button", { name: "Delete", exact: true }).click();
+    await confirmDialog.getByRole("button", { name: "Delete task", exact: true }).click();
     await page.waitForFunction(() => document.querySelectorAll("#taskTimeline li").length === 1);
-    console.log("PASS: task create, edit, cancel, start, complete, reopen, confirmed delete, sorted timeline, safe text");
+    console.log("PASS: task create, edit, cancel, start, complete, reopen, dialog-confirmed delete, sorted timeline, safe text");
     const apia = await browser.newContext({ timezoneId: "Pacific/Apia", locale: "en-US" });
     const calendarPage = await apia.newPage();
     await calendarPage.route("**/api/tasks", route => route.fulfill({ json: [
@@ -96,8 +100,10 @@ const path = require("node:path");
     ] }));
     await calendarPage.goto(base + "/timeline.html");
     await calendarPage.locator("#taskTimeline li").nth(1).waitFor();
-    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="2011-12-30"]').textContent(), "Dec 30, 2011");
-    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="0099-07-01"]').textContent(), "Jul 1, 99");
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="2011-12-30"] .sr').textContent(), "Due Dec 30, 2011");
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="2011-12-30"] .d').textContent(), "30");
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="0099-07-01"] .sr').textContent(), "Due Jul 1, 99");
+    assert.equal(await calendarPage.locator('#taskTimeline time[datetime="0099-07-01"] .d').textContent(), "1");
     await apia.close();
     console.log("PASS: calendar dates retain their day and early year in Pacific/Apia");
     for (const [timezoneId, today] of [["America/Los_Angeles", "2026-07-09"], ["Pacific/Apia", "2026-07-10"]]) {
@@ -114,7 +120,7 @@ const path = require("node:path");
       await detailsPage.route("**/api/tasks", route => route.fulfill({ json: fixtures }));
       await detailsPage.goto(base + "/timeline.html");
       await detailsPage.locator("#taskTimeline li").nth(3).waitFor();
-      for (const selector of ["#taskTimeline", "#taskList"]) {
+      for (const selector of ["#taskTimeline"]) {
         assert.equal(await detailsPage.locator(`${selector} .overdue-label`).count(), 1);
         const overdue = detailsPage.locator(`${selector} .overdue-date`);
         assert.equal(await overdue.getAttribute("datetime"), "2026-07-08");
@@ -123,36 +129,36 @@ const path = require("node:path");
       }
       const info = detailsPage.getByRole("button", { name: "Details for Past task", exact: true });
       const popover = detailsPage.locator("#task-details-1");
+      const detailsText = async locator => (await locator.locator("dt, dd").allTextContents()).join("\n");
       await info.focus();
       await detailsPage.keyboard.press("Enter");
       assert.equal(await popover.isVisible(), true);
-      assert.match(await popover.textContent(), /Description: <b>Practice<\/b>/);
-      assert.match(await popover.textContent(), /Category: Interview prep/);
-      assert.match(await popover.textContent(), /Estimated hours: 2.5/);
+      assert.equal(await info.getAttribute("aria-expanded"), "true");
+      assert.match(await detailsText(popover), /Description\n<b>Practice<\/b>/);
+      assert.match(await detailsText(popover), /Category\nInterview prep/);
+      assert.match(await detailsText(popover), /Estimated hours\n2.5 hours/);
       assert.equal(await popover.locator("b").count(), 0);
       await detailsPage.keyboard.press("Escape");
       assert.equal(await popover.isVisible(), false);
+      assert.equal(await info.getAttribute("aria-expanded"), "false");
       assert.equal(await info.evaluate(node => node === document.activeElement), true);
       await info.click();
       await info.click();
       assert.equal(await popover.isVisible(), false);
-      await info.click();
-      await detailsPage.locator("#timelineHeader").click();
-      assert.equal(await popover.isVisible(), false);
       await detailsPage.getByRole("button", { name: "Details for Today task", exact: true }).click();
-      assert.match(await detailsPage.locator(":popover-open").textContent(), /Estimated hours: 0/);
-      assert.match(await detailsPage.locator(":popover-open").textContent(), /No description provided/);
+      assert.match(await detailsText(detailsPage.locator("#task-details-2")), /Estimated hours\n0 hours/);
+      assert.match(await detailsText(detailsPage.locator("#task-details-2")), /No description provided/);
       for (const width of [390, 1440]) {
         await detailsPage.setViewportSize({ width, height: 700 });
         await info.click();
         const box = await popover.boundingBox();
-        assert.ok(box.x >= 0 && box.y >= 0 && box.x + box.width <= width && box.y + box.height <= 700);
-        if (width === 1440) assert.ok(box.x > width / 2);
+        assert.ok(box.x >= 0 && box.x + box.width <= width);
+        assert.equal(await detailsPage.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
         await detailsPage.keyboard.press("Escape");
       }
       await context.close();
     }
-    console.log("PASS: local-day overdue rules in both lists; safe task details, keyboard/toggle/outside dismissal, mobile fit");
+    console.log("PASS: local-day overdue rules; safe inline task details, keyboard/toggle dismissal, mobile fit");
     await page.goto(base + "/dashboard.html");
     await page.goto(base + "/timeline.html#create");
     assert.equal(await page.locator("#taskCreationForm").isVisible(), true);
@@ -165,6 +171,71 @@ const path = require("node:path");
     await page.reload();
     await page.getByRole("checkbox").first().waitFor();
     assert.equal(await checkbox.isChecked(), true);
+    // Saving one question must preserve every row and unrelated controls, including keyboard focus.
+    for (const fails of [false, true]) {
+      let release;
+      const gate = new Promise(resolve => { release = resolve; });
+      let received;
+      const started = new Promise(resolve => { received = resolve; });
+      await page.route("**/api/progress/*", async route => {
+        received();
+        await gate;
+        if (fails) await route.fulfill({ status: 500, json: { error: "Test failure" } });
+        else await route.continue();
+      });
+      const before = await checkbox.isChecked();
+      await page.evaluate(() => { window.savedQuestionInputs = [...document.querySelectorAll('#questions input')]; });
+      await checkbox.focus();
+      await page.keyboard.press("Space");
+      await started;
+      assert.equal(await page.getByRole("checkbox").nth(1).isEnabled(), true);
+      assert.equal(await page.getByRole("checkbox").nth(1).evaluate(node => getComputedStyle(node.closest('label')).opacity), "1");
+      release();
+      await page.getByText(fails ? "Unable to save progress. Please try again." : "Progress saved.", { exact: true }).waitFor();
+      assert.equal(await checkbox.isChecked(), fails ? before : !before);
+      assert.equal(await checkbox.evaluate(node => node === document.activeElement), true);
+      assert.equal(await page.evaluate(() => window.savedQuestionInputs.every((node, i) => node === document.querySelectorAll('#questions input')[i])), true);
+      await page.unroute("**/api/progress/*");
+    }
+    console.log("PASS: question save/rollback preserves row identity, unrelated controls and keyboard focus");
+    // Overlapping saves must keep the latest focus owner and preserve any failed outcome.
+    for (const order of [[0, 1], [1, 0]]) {
+      for (const fails of [false, true]) {
+        for (const moveFocus of [false, true]) {
+          const held = [];
+          await page.route("**/api/progress/*", route => { held.push(route); });
+          const controls = [page.getByRole("checkbox").nth(0), page.getByRole("checkbox").nth(1)];
+          const before = await Promise.all(controls.map(control => control.isChecked()));
+          for (const control of controls) {
+            await control.focus();
+            await page.keyboard.press("Space");
+          }
+          await page.waitForFunction(() => document.querySelectorAll('#questions input:disabled').length === 2);
+          // Wait for both intercepted requests, without relying on response timing.
+          const started = Date.now();
+          while (held.length < 2 && Date.now() - started < 5000) await new Promise(resolve => setTimeout(resolve, 10));
+          assert.equal(held.length, 2);
+          const link = page.locator(".qlink").first();
+          if (moveFocus) await link.focus();
+          for (const [step, index] of order.entries()) {
+            await held[index].fulfill(fails && index === 0
+              ? { status: 500, json: { error: "Test failure" } }
+              : { status: 200, json: { completed: !before[index] } });
+            await page.waitForFunction(i => !document.querySelectorAll('#questions input')[i].disabled, index);
+            if (step === 0 && !(fails && index === 0)) {
+              assert.equal(await page.locator("#message").textContent(), "Saving progress…");
+            }
+          }
+          assert.equal(await page.locator("#message").textContent(), fails
+            ? "Unable to save progress. Please try again." : "Progress saved.");
+          assert.equal(await controls[0].isChecked(), fails ? before[0] : !before[0]);
+          assert.equal(await controls[1].isChecked(), !before[1]);
+          assert.equal(await (moveFocus ? link : controls[1]).evaluate(node => node === document.activeElement), true);
+          await page.unroute("**/api/progress/*");
+        }
+      }
+    }
+    console.log("PASS: concurrent saves preserve newest/user-moved focus and mixed-outcome failure");
     await page.locator("#topic").selectOption({ index: 1 });
     assert.equal(await page.locator("#questions section").count(), 1);
     await page.goto(base + "/create.html");
@@ -187,11 +258,51 @@ const path = require("node:path");
     await page.waitForURL(base + "/");
     assert.deepEqual(await (await page.request.get(base + "/api/appointments")).json(), []);
     console.log("PASS: create deep link/focus, question filter and saved progress, appointment create/edit/delete");
-    for (const width of [390, 768, 1440]) {
+    // An initial stale list (or error) cannot overwrite the list after a successful create.
+    for (const fails of [false, true]) {
+      let release, finished;
+      const gate = new Promise(resolve => { release = resolve; });
+      const delivered = new Promise(resolve => { finished = resolve; });
+      let first = true;
+      await page.route("**/api/tasks", async route => {
+        if (route.request().method() !== "GET" || !first) return route.continue();
+        first = false;
+        const response = await route.fetch();
+        const body = await response.text();
+        await gate;
+        if (fails) await route.fulfill({ status: 500, json: { error: "Old load failed" } });
+        else await route.fulfill({ response, body });
+        finished();
+      });
+      await page.goto(base + "/timeline.html");
+      await page.locator("#taskCreationOpenButton").click();
+      const title = `Created during old ${fails ? 'failed' : 'successful'} load`;
+      await page.locator("#taskTitle").fill(title);
+      await page.locator("#category").fill("Interview prep");
+      await page.locator("#dueDate").fill("2026-12-01");
+      await page.locator("#taskCreationSubmitButton").click();
+      await page.getByRole("heading", { name: title, exact: true }).waitFor();
+      release();
+      await delivered;
+      await page.waitForLoadState("networkidle");
+      assert.equal(await page.getByRole("heading", { name: title, exact: true }).count(), 1);
+      assert.equal(await page.locator("#taskError").textContent(), "");
+      await page.setViewportSize({ width: 390, height: 844 });
+      const row = page.locator(".tl-card").filter({ has: page.getByRole("heading", { name: title, exact: true }) });
+      const item = row.locator("..");
+      assert.match(await item.ariaSnapshot(), /Due Dec 1, 2026/);
+      assert.equal(await item.locator(".task-info").getAttribute("aria-expanded"), "false");
+      await page.unroute("**/api/tasks");
+    }
+    console.log("PASS: stale task loads ignored; phone due dates exposed with details closed");
+    for (const width of [320, 390, 768, 1440]) {
       await page.setViewportSize({ width, height: 900 });
       for (const file of ["index", "dashboard", "timeline", "questions", "careerResources", "login", "create"]) {
         await page.goto(`${base}/${file}.html`);
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `${file} overflow at ${width}`);
+        if (file === "index" && width <= 390) {
+          assert.equal(await page.locator(".card.dest").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 1);
+        }
         if (file !== "create") {
           assert.equal(await page.locator('nav [aria-current="page"]').count(), 1);
           assert.equal(await page.locator("nav a").count(), 6);

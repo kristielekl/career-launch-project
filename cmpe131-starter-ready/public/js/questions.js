@@ -2,6 +2,19 @@ const topicSelect = document.getElementById("topic");
 const container = document.getElementById("questions");
 const message = document.getElementById("message");
 
+// Shows a status message; kind picks the colour (ok, err or info). Empty text hides it.
+function showMessage(text, kind = "info") {
+  message.textContent = text;
+  message.className = `msg msg-${kind}`;
+}
+
+function icon(name, size) {
+  const span = document.createElement("span");
+  span.className = `ico i-${name} ${size}`;
+  span.setAttribute("aria-hidden", "true");
+  return span;
+}
+
 async function loadQuestions() {
   try {
     const [catalogResponse, progressResponse] = await Promise.all([
@@ -19,10 +32,9 @@ async function loadQuestions() {
     const topics = [...new Set(questions.map(question => question.topic))];
     for (const topic of topics) topicSelect.add(new Option(topic, topic));
 
-    function setSaving(saving) {
-      topicSelect.disabled = saving;
-      container.querySelectorAll("input").forEach(input => { input.disabled = saving; });
-    }
+    let pendingSaves = 0;
+    let batchFailed = false;
+    let focusOwner = null;
 
     function render() {
       container.replaceChildren();
@@ -31,28 +43,59 @@ async function loadQuestions() {
         const heading = document.createElement("h2");
         heading.textContent = topic;
         const topicQuestions = questions.filter(question => question.topic === topic);
-        const count = topicQuestions.filter(question => question.completed).length;
-        const summary = document.createElement("p");
+        const summary = document.createElement("span");
         summary.className = "topic-progress";
-        summary.textContent = `${count} / ${topicQuestions.length} completed (${Math.round(count / topicQuestions.length * 100)}%)`;
-        const list = document.createElement("ul");
+        const bar = document.createElement("span");
+        bar.className = "progress";
+        bar.setAttribute("aria-hidden", "true");
+        const fill = document.createElement("span");
+        function updateSummary() {
+          const count = topicQuestions.filter(question => question.completed).length;
+          const percent = Math.round(count / topicQuestions.length * 100);
+          summary.textContent = `${count} / ${topicQuestions.length} completed (${percent}%)`;
+          fill.style.width = `${percent}%`;
+        }
+        updateSummary();
+        bar.append(fill);
+        const meta = document.createElement("span");
+        meta.className = "tmeta";
+        meta.append(bar, summary);
+        const head = document.createElement("div");
+        head.className = "topic-head";
+        head.append(heading, meta);
+        const section = document.createElement("section");
+        section.className = "qtopic";
+        section.setAttribute("aria-label", topic);
+        section.append(head);
         for (const question of topicQuestions) {
-          const item = document.createElement("li");
+          const item = document.createElement("div");
+          item.className = "q";
           const link = document.createElement("a");
+          link.className = "qlink";
           link.textContent = question.title;
+          link.append(icon("ext", "ico-xs"));
           link.href = question.external_url;
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          item.append(link, ` (${question.difficulty})`);
+          const difficulty = document.createElement("span");
+          difficulty.className = "tag";
+          difficulty.textContent = question.difficulty;
+          item.append(link, difficulty);
           const label = document.createElement("label");
+          label.className = "check";
           const checkbox = document.createElement("input");
           checkbox.type = "checkbox";
           checkbox.checked = question.completed;
           checkbox.setAttribute("aria-label", `${question.title} completed`);
           checkbox.onchange = async () => {
             const nextCompleted = checkbox.checked;
-            setSaving(true);
-            message.textContent = "Saving progress…";
+            const hadFocus = document.activeElement === checkbox;
+            if (hadFocus) focusOwner = checkbox;
+            if (pendingSaves === 0) batchFailed = false;
+            checkbox.disabled = true;
+            pendingSaves++;
+            topicSelect.disabled = true;
+            showMessage("Saving progress…");
             try {
               const response = await fetch(`/api/progress/${question.question_id}`, {
                 method: "PUT", headers: { "Content-Type": "application/json" },
@@ -61,29 +104,33 @@ async function loadQuestions() {
               if (!response.ok) throw new Error("Unable to save progress.");
               const saved = await response.json();
               question.completed = saved.completed;
-              render();
-              message.textContent = "Progress saved.";
+              checkbox.checked = saved.completed;
+              updateSummary();
             } catch {
               checkbox.checked = question.completed;
-              message.textContent = "Unable to save progress. Please try again.";
+              batchFailed = true;
             } finally {
-              setSaving(false);
+              checkbox.disabled = false;
+              topicSelect.disabled = --pendingSaves > 0;
+              // Disabling may move focus to body; don't steal focus if the user moved elsewhere.
+              if (focusOwner === checkbox && document.activeElement === document.body) checkbox.focus();
+              if (batchFailed) showMessage("Unable to save progress. Please try again.", "err");
+              else if (pendingSaves) showMessage("Saving progress…");
+              else showMessage("Progress saved.", "ok");
             }
           };
-          label.append(checkbox, " Completed");
-          item.append(" ", label);
-          list.append(item);
+          label.append(checkbox, "Completed");
+          item.append(label);
+          section.append(item);
         }
-        const section = document.createElement("section");
-        section.append(heading, summary, list);
         container.append(section);
       }
     }
     topicSelect.addEventListener("change", render);
     render();
-    message.textContent = questions.length ? "" : "No questions available.";
+    showMessage(questions.length ? "" : "No questions available.");
   } catch {
-    message.textContent = "Unable to load questions and progress. Please refresh to try again.";
+    showMessage("Unable to load questions and progress. Please refresh to try again.", "err");
   }
 }
 

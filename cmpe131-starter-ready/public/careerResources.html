@@ -1,63 +1,49 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Career Resources Page</title>
-  <link rel ="stylesheet" href="css/styles.css"> <!--Style CSS for Style and Formatting-->
+  <title>Career Resources - CareerLaunch</title>
+  <script src="js/theme.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <nav>
-    <div class="navigation-headings">
-      <h1><a href="index.html" class="navigation" id="titletext">CareerLaunch</a></h1>
-      <h2><a href="dashboard.html" class="navigation" id="dashboardtext">Dashboard</a></h2>
-      <h2><a href="timeline.html" class="navigation" id="navigationtext">Timeline</a></h2>
-      <h2><a href="questions.html" class="navigation">Question Map</a></h2>
-      <h2><a href="careerResources.html" class="navigation" aria-current="page">Career Resources</a></h2>
-      <h2><a href="login.html" class="navigation" id="logintext">Login</a></h2>
+<body class="app">
+  <nav class="side" aria-label="Main navigation">
+    <a class="brand" href="index.html"><span class="mark"><span class="ico i-launch" aria-hidden="true"></span></span>CareerLaunch</a>
+    <div class="tabs">
+      <a class="nav-item" href="dashboard.html"><span class="ico i-grid" aria-hidden="true"></span><span>Dashboard</span></a>
+      <a class="nav-item" href="timeline.html"><span class="ico i-timeline" aria-hidden="true"></span><span>Timeline</span></a>
+      <a class="nav-item" href="questions.html"><span class="ico i-code" aria-hidden="true"></span><span>Question Map</span></a>
+      <a class="nav-item" href="careerResources.html" aria-current="page"><span class="ico i-book" aria-hidden="true"></span><span><span class="long">Career </span>Resources</span></a>
     </div>
+    <a class="nav-item login-link" href="login.html"><span class="ico i-login" aria-hidden="true"></span>Login</a>
+    <label class="theme-choice"><span>Theme</span><select id="themeChoice" aria-label="Color theme"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
   </nav>
-
-  <hr id="headerline">
-  
-  <div class="resources-container">
-    <p id="resourceError" role="alert" hidden>This resource is unavailable. Please choose another resource.</p>
-    <div class="sjsu-resources">
-      <h1>
-          SJSU's Career Resources
-      </h1>
-          <p> 
-            SJSU offers a vast amount of resources to help students with preparing for life after colleges. The resources there can help with finding and preparing for employment, 
-            in addition to creating meaningful connections towards success in their futures.
-          </p>
-
-          <p>Many of the resources below are just some of the important resources that we believe will help students succeed the most in their future.</p>
-          <p><a href="https://careercenter.sjsu.edu/" target="_blank">Career Center</a></p>
-          <p><a href="https://careercenter.sjsu.edu/resources/resume-cover-letter-guide/" target="_blank">Resume, CV & Cover Letter Guide</a></p>
-          <p><a href="https://careercenter.sjsu.edu/resources/interviewing-guide/" target="_blank">Interviewing Guide</a></p>
-    <div class="digital-career-tools">
-        <h1>
-            SJSU's Digital Career Tools
-        </h1>
-        <h2>Handshake</h2>
-          <p>San Jose State University utilizes this as one of their official career platforms, making searching for employment, applying for internships, and helping students to
-            prepare for a full-time job after graduation. 
-          </p>
-          <p>It is also great for making connections with previous alumni and employers interested in hiring SJSU graduates.</p>
-          <a href="https://joinhandshake.com/" target="_blank" class="button-link">Go to Handshake</a>
-        <h2>Hiration</h2>
-          <p>A comprehensive application made to help you improve your interview skills with feedback powered by AI.</p>
-          <p>Fully customizable and provides tons of useful feedback in preparing you for your future interviews.</p>
-          <a href="https://www.hiration.com/" target="_blank" class="button-link">Go to Hiration</a>
-        <h2>The Forage</h2>
-          <p>
-            Free virtual job simulatinos that help the individual to develop the necessary skills needed for interviews to improve confidence and develop practical skills in prepartion
-            for future employment.
-          </p>
-          <a href="https://www.theforage.com/" target="_blank" class="button-link">Go to The Forage</a>
+  <main class="content">
+    <div class="page-head"><div><h1>Career Resources</h1>
+      <p class="sub">SJSU offers many resources for finding and preparing for jobs. These are the ones that help students most. Links open the official sites in a new tab.</p></div></div>
+    <div class="resources-container">
+      <p id="resourceError" role="alert" hidden>This resource is unavailable. Please choose another resource.</p>
+      <h2 class="section-title">SJSU Career Center guides</h2>
+      <div class="res-list">
+        <a class="res-link" href="https://careercenter.sjsu.edu/" target="_blank" rel="noopener noreferrer"><span class="ricon"><span class="ico i-building" aria-hidden="true"></span></span><span><span class="t">Career <span class="nowrap">Center<span class="ico i-ext ico-xs" aria-hidden="true"></span></span></span><span class="u">careercenter.sjsu.edu</span></span><span class="sr"> (opens in a new tab)</span></a>
+        <a class="res-link" href="https://careercenter.sjsu.edu/resources/resume-cover-letter-guide/" target="_blank" rel="noopener noreferrer"><span class="ricon"><span class="ico i-doc" aria-hidden="true"></span></span><span><span class="t">Resume, CV &amp; Cover Letter <span class="nowrap">Guide<span class="ico i-ext ico-xs" aria-hidden="true"></span></span></span><span class="u">Career Center guide</span></span><span class="sr"> (opens in a new tab)</span></a>
+        <a class="res-link" href="https://careercenter.sjsu.edu/resources/interviewing-guide/" target="_blank" rel="noopener noreferrer"><span class="ricon"><span class="ico i-chat" aria-hidden="true"></span></span><span><span class="t">Interviewing <span class="nowrap">Guide<span class="ico i-ext ico-xs" aria-hidden="true"></span></span></span><span class="u">Career Center guide</span></span><span class="sr"> (opens in a new tab)</span></a>
+      </div>
+      <h2 class="section-title">SJSU digital career tools</h2>
+      <div class="tools">
+        <section class="card tool" aria-labelledby="tool-briefcase"><div class="tool-h"><span class="ricon"><span class="ico i-briefcase" aria-hidden="true"></span></span><div><h3 id="tool-briefcase">Handshake</h3><span class="use">Jobs and internships</span></div></div>
+          <p>SJSU's official career platform for finding jobs and internships and preparing for full-time work. Also a way to connect with alumni and employers hiring SJSU graduates.</p>
+          <a class="btn btn-secondary" href="https://joinhandshake.com/" target="_blank" rel="noopener noreferrer">Go to Handshake<span class="ico i-ext ico-sm" aria-hidden="true"></span><span class="sr"> (opens in a new tab)</span></a></section>
+        <section class="card tool" aria-labelledby="tool-mic"><div class="tool-h"><span class="ricon"><span class="ico i-mic" aria-hidden="true"></span></span><div><h3 id="tool-mic">Hiration</h3><span class="use">Resume and interview practice</span></div></div>
+          <p>Practice interviews and get AI-powered feedback on your answers. Customizable for the roles you are preparing for.</p>
+          <a class="btn btn-secondary" href="https://www.hiration.com/" target="_blank" rel="noopener noreferrer">Go to Hiration<span class="ico i-ext ico-sm" aria-hidden="true"></span><span class="sr"> (opens in a new tab)</span></a></section>
+        <section class="card tool" aria-labelledby="tool-monitor"><div class="tool-h"><span class="ricon"><span class="ico i-monitor" aria-hidden="true"></span></span><div><h3 id="tool-monitor">The Forage</h3><span class="use">Job simulations</span></div></div>
+          <p>Free virtual job simulations that build practical skills and confidence before interviews.</p>
+          <a class="btn btn-secondary" href="https://www.theforage.com/" target="_blank" rel="noopener noreferrer">Go to The Forage<span class="ico i-ext ico-sm" aria-hidden="true"></span><span class="sr"> (opens in a new tab)</span></a></section>
+      </div>
     </div>
-    </div>
-  </div>
+  </main>
   <script>
     document.querySelector('.resources-container').addEventListener('click', (event) => {
       const link = event.target.closest('a');
