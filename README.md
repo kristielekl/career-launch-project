@@ -1,6 +1,28 @@
 # career-launch-project
-cmpe 131 term project 1 
-CareerLaunch - career prep & progress tracker for cs students
+CMPE 131 Term Project - FALL 26
+CareerLaunch - Career Preparation & Progress tracker for CS/SW/DS students.
+
+## Run it
+1. Change directory to the */cmpe131-starter-ready* folder by entering in the terminal:  
+
+    ```bash 
+    cd cmpe131-starter-ready
+     ```
+
+2. Install **Node.js (LTS)**.
+
+3. In the folder *.../cmpe131-starter-ready*:
+
+   ```bash
+   npm install
+   npm start
+   ```
+
+3. Open in a browser:
+
+   - http://localhost:3000
+
+
 
 -----------------
 FOLDER STRUCTURE 
